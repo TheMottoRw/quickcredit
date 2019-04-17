@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Loan-Repayment</title>
+	<link rel="stylesheet" type="text/css" href="css/styles.css">
+</head>
+<body>
+	<div class="menu">
+		<ul>
+			<li class="app-name"><a href="#">Quick Credit</a></li>
+			<li class="active"><a href="loan-repayment.html">Loans</a></li>
+			<li><a href="loan-applications.html">Applications</a></li>
+			<li><a href="clients.html">Users</a></li>
+		</ul>
+	</div>
+		<div class="row">
+			<h5 class="header header-main">LOAN REPAYMENT TRANSACTION HISTORY </h5>
+			<div class="col-5-large col-12-tab col-p">
+			<div class="col-0-large col-12-tab col-p form-element">
+			<input type="button" name="" class="header bg-blue" id="view-loans" value="View Loans">
+			</div>
+			<input type="text" name="search" id="search" placeholder="Search by keyword">
+				<div class="card-list card-list-header">
+					<img src="images/users.png"  >
+					<div class="list-info">
+						<span class="list-user">Manzi Roger-Loan Taken</span>
+					</div>
+					<div class="list-info">
+						<span class='list-left'><span class='amount text-green'>$1800</span> Amount</span>&nbsp;|&nbsp;
+						<span class='list-middle'><span class="amount text-green">+$90</span> Interest</span>&nbsp;|&nbsp;
+						<span id="list-right">6 Months</span>
+					</div>
+					<div class="list-info">
+						<span class="list-left"><span class='amount text-blue'>$315</span> Balance</span>&nbsp;|&nbsp;
+						<span class="list-middle">2018-03-29</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;
+						<span class="list-right text-status">Given</span>
+					</div>
+				</div>
+				<div class="card-list">
+					<img src="images/users.png"  style="float: left;height: 10%;width: 15%;padding-right: 3%">
+					<div class="list-info">
+						<span class="list-user">Transaction</span>
+					</div>
+					<div class="list-info">
+						<span class='list-left'><span class='amount text-green'>$800</span> Amount</span>&nbsp;|&nbsp;
+						<span class='list-middle'><span class="amount text-green">$400</span> Balance</span>
+					</div>
+					<div class="list-info">
+						<span class="list-middle">Paid on 2018-04-10</span>
+					</div>
+				</div>
+				<div class="card-list">
+					<img src="images/users.png"  style="float: left;height: 10%;width: 15%;padding-right: 3%">
+					<div class="list-info">
+						<span class="list-user">Transaction</span>
+					</div>
+					<div class="list-info">
+						<span class='list-left'><span class='amount text-green'>$1000</span> Amount</span>&nbsp;|&nbsp;
+						<span class='list-middle'><span class="amount text-green">$780</span> Balance</span>
+					</div>
+					<div class="list-info">
+						<span class="list-middle">Paid on 2018-03-19</span>
+					</div>
+					</div>
+					<div class="card-list">
+					<img src="images/users.png"  style="float: left;height: 10%;width: 15%;padding-right: 3%">
+					<div class="list-info">
+						<span class="list-user">Transaction</span>
+					</div>
+					<div class="list-info">
+						<span class='list-left'><span class='amount text-green'>$600</span> Amount</span>&nbsp;|&nbsp;
+						<span class='list-middle'><span class="amount text-green">$450</span> Balance</span>
+					</div>
+					<div class="list-info">
+						<span class="list-middle">Paid on 2018-03-11</span>
+					</div>
+					</div>
+					<div class="card-list">
+					<img src="images/users.png"  style="float: left;height: 10%;width: 15%;padding-right: 3%">
+					<div class="list-info">
+						<span class="list-user">Transaction</span>
+					</div>
+					<div class="list-info">
+						<span class='list-left'><span class='amount text-green'>$600</span> Amount</span>&nbsp;|&nbsp;
+						<span class='list-middle'><span class="amount text-green">$215</span> Balance</span>
+					</div>
+					<div class="list-info">
+						<span class="list-middle">Paid on 2018-04-07</span>
+					</div>
+					</div>
+					<div class="card-list">
+					<img src="images/users.png"  style="float: left;height: 10%;width: 15%;padding-right: 3%">
+					<div class="list-info">
+						<span class="list-user">Transaction</span>
+					</div>
+					<div class="list-info">
+						<span class='list-left'><span class='amount text-green'>$1800</span> Amount</span>&nbsp;|&nbsp;
+						<span class='list-middle'><span class="amount text-green">$905</span> Balance</span>
+					</div>
+					<div class="list-info">
+						<span class="list-middle">Paid on 2018-03-01</span>
+					</div>
+					</div>
+					<div class="card-list">
+					<img src="images/users.png"  style="float: left;height: 10%;width: 15%;padding-right: 3%">
+					<div class="list-info">
+						<span class="list-user">Transaction</span>
+					</div>
+					<div class="list-info">
+						<span class='list-left'><span class='amount text-green'>$1000</span> Amount</span>&nbsp;|&nbsp;
+						<span class='list-middle'><span class="amount text-green">$150</span> Balance</span>&nbsp;|&nbsp;
+					</div>
+					<div class="list-info">
+						<span class="list-middle">Paid on 2018-02-19</span>
+					</div>
+				</div>
+				<input type="button" name="" class="header" value="Load more...">
+			</div><!--end col-6-large -->
+			<div class='col-7-large col-0-tab col-0-p'>
+
+					<div class="card-notifications table-notifier">repayment history  successfull loaded<span class="close">&times;</span>
+					</div>
+			<div class="table">
+				<table border="1" cellspacing="0">
+					<thead>
+					<tr><th class="table-caption" colspan='8'>Current Loans</th></tr>
+						<tr>
+							<th>Name</th>
+							<th>Amount</th>
+							<th>Tenor</th>
+							<th>Balance</th>
+							<th>Installement</th>
+							<th>Balance</th>
+							<th>Actions</th>
+						</tr>
+						<tr>
+							<th>Filter </th>
+							<th colspan="6">
+							<div class="form-element">
+								<select>
+									<option>Payment Status</option>
+									<option value='false'>Not fully repaid</option>
+									<option value="true">Fully Paid</option>
+								</select>
+							</div>
+							</th>
+							</tr>
+					</thead>
+					<tbody>
+						
+						<tr>
+							<td>Murenzi Ernest</td>
+							<td>$1500</td>
+							<td>9 Mon</td>
+							<td>$75</td>
+							<td>$175</td>
+							<td>$1200</td>
+							<td><span class="list-actions"><input type="button" name="" class="repayment" value="Repayment"></span></td>
+						</tr>
+						<tr>
+							<td>Hakizimana Didier</td>
+							<td>$400</td>
+							<td>4 Mon</td>
+							<td>$20</td>
+							<td>$105</td>
+							<td>$420</td>
+							<td><span class="list-actions"><input type="button" name="" class="repayment" value="Repayment"></span></td>
+						</tr>
+						<tr>
+							<td>Iradukunda Dany</td>
+							<td>$700</td>
+							<td>5 Mon</td>
+							<td>$35</td>
+							<td>$147</td>
+							<td>$500</td>
+							<td><span class="list-actions"><input type="button" name="" class="repayment" value="Repayment"></span></td>
+						</tr>
+						<tr>
+							<td>Kamanzi James</td>
+							<td>$300</td>
+							<td>3 Mon</td>
+							<td>$15</td>
+							<td>$105</td>
+							<td>$210</td>
+							<td><span class="list-actions"><input type="button" name="" class="repayment" value="Repayment"></span></td>
+						</tr>
+						<tr>
+							<td>Kamanzi James</td>
+							<td>$300</td>
+							<td>3 Mon</td>
+							<td>$15</td>
+							<td>$105</td>
+							<td>$105</td>
+							<td><span class="list-actions"><input type="button" name="" class="repayment" value="Repayment"></span></td>
+						</tr>
+						<tr>
+							<td>Keza Cynthia</td>
+							<td>$900</td>
+							<td>6 Mon</td>
+							<td>$45</td>
+							<td>$157</td>
+							<td>$945</td>
+							<td><span class="list-actions"><input type="button" name="" class="repayment" value="Repayment"></span></td>
+						</tr>
+						<tr>
+							<td>Kamana John</td>
+							<td>$650</td>
+							<td>8 Mon</td>
+							<td>$32.5</td>
+							<td>$83</td>
+							<td>$682.5</td>
+							<td><span class="list-actions"><input type="button" name="" class="repayment" value="Repayment"></span></td>
+						</tr>
+						<tr>
+							<td>Uwineza Jacky</td>
+							<td>$1200</td>
+							<td>4 Mon</td>
+							<td>$60</td>
+							<td>$315</td>
+							<td>$330</td>
+							<td><span class="list-actions"><input type="button" name="" class="repayment" value="Repayment"></span></td>
+						</tr>
+						<tr>
+							<td colspan="7"><input type="button" name="" class="header" value="Load more..."></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			</div>
+			
+		</div>
+</body>
+</html>
+<script type="text/javascript" src='js/scripts.js'></script>
+<script type="text/javascript">
+	initNotification('.header-main','.main-notifier');//loading repayment history
+initNotification('.repayment','.table-notifier');//loading repayment history
+
+</script>
