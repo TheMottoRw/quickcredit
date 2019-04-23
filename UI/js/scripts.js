@@ -20,3 +20,26 @@ for (d of el){
 d.onclick=()=>{toggleNotification(notificationElem);};
 }
 }
+const toggleModal=()=>{
+	var overlayCounter=0;
+	overlayElem=document.querySelectorAll(".overlay");
+	for(overlay of overlayElem){
+		overlay.onclick=()=>{
+			toggleModal();
+		}
+		/*for(viewMore of viewMores){
+			viewMore.onclick=()=>{
+				toggleModal();
+			}
+		}*/
+		if(overlay.style.display=='none')	
+			overlay.style.display='block';
+		else
+			overlay.style.display='none';
+		overlay.getElementsByClassName('close-window')[0].onclick=()=>{
+			overlay.style.display='none';
+		}
+		overlayCounter++;
+	}
+	overlayCounter=0;
+}
