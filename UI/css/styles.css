@@ -98,11 +98,12 @@ ul {
 }
 li {
 	  float: right;
+	  display:inline-block;
 	}
 @media screen and(max-width:600px){
 	.menu-items{
 		padding-right: 20%;
-	}		
+	}
 }
 .app-name{
 	float:left;
@@ -273,9 +274,7 @@ caption{
 			width: 108%;
 	}
 
-.card-index{
-	width: 100%;
-}
+
 .card-notifications{
 	background-color:#53ab76;
 	padding: 1% 2% 2% 0%;
@@ -325,21 +324,30 @@ span .view-more{
 		width: 100%;
 	}
 }
-
 @media screen and (min-width: 501px) and (max-width: 899px){
-	.card-index img{
+	.card-index .image-index{
 	min-width: 50%;
-	max-height: 10%;
+	max-height: 350px;
 	}
 }
 @media screen and (max-width: 500px){
-	.card-index img{
+	.card-index .image-index{
 	min-width: 100%;
-	max-height: 10%;
+	max-height: 350px;
 	}
 }
 .card-list:hover{
 	background-color: #dbdedc;
+}
+.card-index{
+	width: 100%;
+}
+.card-index:hover{
+	background-color :#fff6ff; 
+}
+.card-index .image-index{
+	height: 350px;
+	width: 35%;
 }
 .card-list img{
 	float: left;
@@ -415,8 +423,23 @@ input[type="button"] .reject{
 	background-color: rgba(0,0,0,0.5);
 	z-index: 1;
 }
+.overlay .card-list:hover{
+	background-color: white;
+}
 .project-info{
 	font-size: 17px;
 	font-family: arial;
 	margin-left: 3%;
+}
+.footer{
+	background-color:#237d47;
+	text-align: center;
+	font-size: 16px;
+	font-family: arial;
+	color: white;
+	width: 100%;
+	position: fixed;
+	bottom:0;
+	padding:10px;
+	font-weight: bold;
 }
