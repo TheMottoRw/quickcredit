@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "start": "nodemon --exec babel-node server/app.js",
-    "lint": "./node_modules/.bin/eslint",
+    "lint": "./node_modules/.bin/eslint"
   },
   "dependencies": {
     "@babel/cli": "^7.0.0-rc.1",
