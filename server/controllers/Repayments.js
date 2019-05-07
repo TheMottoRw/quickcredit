@@ -22,7 +22,7 @@ export const repaymentById = (req, res) => {
   const repayInfo = quickcredit.body;
   const repaymentInfo = quickcredit.repayments.find(transaction => transaction.id === repayInfo.id);
   res.json(repaymentInfo);
-}
+};
 export const repay = (req, res) => {
   const repayment = req.params;
   let response = null;
