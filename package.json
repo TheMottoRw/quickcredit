@@ -1,0 +1,34 @@
+{
+  "name": "quickcredit",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node api/app.js",
+    "lint": "./node_modules/.bin/eslint"
+  },
+  "dependencies": {
+    "build": "^0.1.4",
+    "cookie-parser": "~1.4.3",
+    "debug": "~2.6.9",
+    "express": "~4.16.0",
+    "http-errors": "~1.6.2",
+    "jade": "~1.11.0",
+    "morgan": "~1.9.0",
+    "request": "^2.88.0",
+    "shortid": "^2.2.14"
+  },
+  "description": "Quick credit is an online lending platform that provides short term soft loans to individuals.",
+  "main": "./api/app.js",
+  "devDependencies": {
+    "@babel/core": "^7.4.4",
+    "@babel/preset-env": "^7.4.4",
+    "@babel/register": "^7.4.4",
+    "eslint": "^5.16.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/TheMottoRw/quickcredit.git"
+  },
+  "author": "Manzi Neretse Roger",
+  "license": "ISC"
+}
