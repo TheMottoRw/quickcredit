@@ -1,9 +1,12 @@
 import quickcredit from '../models/database';
 
-export const loadLoans = (req, res) => {
-  if (req.body.status === undefined && req.body.repaid === undefined) {
-    res.json(quickcredit.loans);
+export const applications = (req, res) => {
+  const parameters = req.query;
+  let loanApplication = null;
+  if (parameters.status === undefined && parameters.repaid === undefined) {
+    loanApplication = quickcredit.loans;
   } else {
-    loadByCriteria(req, res);
+    loanApplication = quickcredit.loans.find(loan => loan.status === parameters.status && loan.repaid === (parameters.repaid === 'true'));
   }
+  res.json(loanApplication);
 };
