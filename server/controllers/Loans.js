@@ -37,6 +37,7 @@ export const loanById = (req, res) => {
     }
   }
   res.status(response.status).json(response);
+};
 export const apply = (req, res) => {
   const loan = req.body;
   let response = null;
