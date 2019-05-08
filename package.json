@@ -4,8 +4,7 @@
   "private": true,
   "scripts": {
     "start": "nodemon --exec babel-node server/app.js",
-    "lint": "./node_modules/.bin/eslint",
-    "test": "nyc mocha ./server/test/test.js --require @babel/register  --timeout 5000 --exit"
+    "lint": "./node_modules/.bin/eslint"
   },
   "dependencies": {
     "build": "^0.1.4",
