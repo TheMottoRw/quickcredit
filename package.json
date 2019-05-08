@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "start": "npm run build && babel-node build/app.js --exit",
+    "start": "babel-node build/app.js --exit",
     "watch": "nodemon --exec babel-node server/app.js",
     "lint": "./node_modules/.bin/eslint",
     "test": "nyc mocha ./server/test/test.js --require @babel/register --exit",
