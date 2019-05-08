@@ -1,0 +1,51 @@
+{
+  "name": "quickcredit",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node build/app.js --exit",
+    "watch": "nodemon --exec babel-node server/app.js",
+    "lint": "./node_modules/.bin/eslint",
+    "test": "nyc mocha ./server/test/test.js --require @babel/register --exit",
+    "clean": "rmdir build /S /Q",
+    "build": "babel -d ./build ./server -s"
+  },
+  "dependencies": {
+    "build": "^0.1.4",
+    "chai": "^4.2.0",
+    "chai-http": "^4.3.0",
+    "cookie-parser": "~1.4.3",
+    "debug": "~2.6.9",
+    "express": "~4.16.0",
+    "http-errors": "~1.6.2",
+    "jade": "~1.11.0",
+    "morgan": "~1.9.0",
+    "nodemailer": "^6.1.1",
+    "nodemon": "^1.19.0",
+    "request": "^2.88.0",
+    "shortid": "^2.2.14"
+  },
+  "description": "Quick credit is an online lending platform that provides short term soft loans to individuals.",
+  "devDependencies": {
+    "@babel/cli": "^7.0.0-rc.1",
+    "@babel/core": "^7.0.0-rc.1",
+    "@babel/node": "^7.0.0-rc.1",
+    "@babel/preset-env": "^7.0.0-rc.1",
+    "eslint": "^5.16.0",
+    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-plugin-import": "^2.17.2",
+    "mocha": "^6.1.4",
+    "coveralls": "^3.0.3",
+    "mocha-lcov-reporter": "^1.3.0",
+    "nyc": "^13.3.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/TheMottoRw/quickcredit.git"
+  },
+  "engines": {
+    "node": "10.4.1"
+  },
+  "author": "Manzi Neretse Roger",
+  "license": "ISC"
+}
