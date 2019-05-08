@@ -4,13 +4,19 @@
   "private": true,
   "scripts": {
     "start": "nodemon --exec babel-node server/app.js",
-    "lint": "./node_modules/.bin/eslint"
-  },
+    "lint": "./node_modules/.bin/eslint",
+    "test": "nyc mocha ./server/test/test.js --require @babel/register  --timeout 5000 --exit"
+    },
   "dependencies": {
+    "@babel/cli": "^7.0.0-rc.1",
+    "@babel/core": "^7.0.0-rc.1",
+    "@babel/node": "^7.0.0-rc.1",
+    "@babel/preset-env": "^7.0.0-rc.1",
     "build": "^0.1.4",
     "chai": "^4.2.0",
     "chai-http": "^4.3.0",
     "cookie-parser": "~1.4.3",
+    "coveralls": "^3.0.3",
     "debug": "~2.6.9",
     "express": "~4.16.0",
     "http-errors": "~1.6.2",
@@ -22,12 +28,7 @@
     "shortid": "^2.2.14"
   },
   "description": "Quick credit is an online lending platform that provides short term soft loans to individuals.",
-  "main": "./server/start.js",
   "devDependencies": {
-    "@babel/cli": "^7.0.0-rc.1",
-    "@babel/core": "^7.0.0-rc.1",
-    "@babel/node": "^7.0.0-rc.1",
-    "@babel/preset-env": "^7.0.0-rc.1",
     "eslint": "^5.16.0",
     "eslint-config-airbnb-base": "^13.1.0",
     "eslint-plugin-import": "^2.17.2",
