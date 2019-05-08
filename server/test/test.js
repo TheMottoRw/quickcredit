@@ -6,6 +6,19 @@ use(chaiHttp);
 
 const version = 'v1';
 const baseUrl = `/api/${version}`;
+// index request page
+describe(`GET ${baseUrl}/`, () => {
+  it('should be able to return welcome message', (done) => {
+    request(app)
+      .get(`${baseUrl}/`)
+      .send()
+      .end((err, res) => {
+      // Expect status to Ok!
+        expect(res.status).to.eql(200);
+        done(err);
+      });
+  });
+});
 // successfull test register new user
 describe(`POST ${baseUrl}/auth/signup`, () => {
   it('should be able to create a new user', (done) => {
