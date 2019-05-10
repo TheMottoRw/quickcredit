@@ -1,4 +1,6 @@
-[![Coverage Status](https://coveralls.io/repos/github/themottorw/quickcredit/badge.svg)](https://coveralls.io/github/themottorw/quickcredit) [![Build Status](https://travis-ci.org/themottorw/quickcredit.svg?branch=develop)](https://travis-ci.org/themottorw/quickcredit) [![Maintainability](https://api.codeclimate.com/v1/badges/ac136a7dbfdd7bce1962/maintainability)](https://codeclimate.com/github/themottorw/quickcredit/maintainability)
+[![Coverage Status](https://coveralls.io/repos/github/TheMottoRw/quickcredit/badge.svg?branch=develop)](https://coveralls.io/github/TheMottoRw/quickcredit?branch=develop)
+https://travis-ci.org/TheMottoRw/quickcredit.svg?branch=develop
+(https://travis-ci.org/themottorw/quickcredit) [![Maintainability](https://api.codeclimate.com/v1/badges/ac136a7dbfdd7bce1962/maintainability)](https://codeclimate.com/github/themottorw/quickcredit/maintainability)
 
 # Quickcredit
 
@@ -79,7 +81,7 @@ example request url,
 ```
 /loans?status=approved&repaid=false
 ```
-### GET /loans?status=repaid&repaid=:repaid
+### GET /loans?status=:status&repaid=:repaid
 this endpoint is used to get loans approved and repaid 	
 
 
@@ -133,7 +135,7 @@ request body example
 	status:'approved'
 }
 ```
-### POST /loans/1/repayment
+### POST /loans/:loanid/repayment
 this endpoint is used to repay loan
 
 example request url, 
@@ -142,7 +144,7 @@ example request url,
 
 request body example
 {
-	loanId:'1',
-	amount:'210'
+	loanId: 1,
+	amount: 210
 }
 ```
