@@ -1,6 +1,7 @@
 [![Coverage Status](https://coveralls.io/repos/github/TheMottoRw/quickcredit/badge.svg?branch=develop)](https://coveralls.io/github/TheMottoRw/quickcredit?branch=develop)
 [![Build Status](https://travis-ci.org/TheMottoRw/quickcredit.svg?branch=develop)](https://travis-ci.org/TheMottoRw/quickcredit)
-(https://travis-ci.org/themottorw/quickcredit) [![Maintainability](https://api.codeclimate.com/v1/badges/ac136a7dbfdd7bce1962/maintainability)](https://codeclimate.com/github/themottorw/quickcredit/maintainability)
+(https://travis-ci.org/themottorw/quickcredit) 
+[![Maintainability(https://api.codeclimate.com/v1/badges/ac136a7dbfdd7bce1962/maintainability)](https://codeclimate.com/github/themottorw/quickcredit/maintainability)
 
 # Quickcredit
 
