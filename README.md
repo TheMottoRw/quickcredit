@@ -1,5 +1,5 @@
 [![Coverage Status](https://coveralls.io/repos/github/TheMottoRw/quickcredit/badge.svg?branch=develop)](https://coveralls.io/github/TheMottoRw/quickcredit?branch=develop)
-https://travis-ci.org/TheMottoRw/quickcredit.svg?branch=develop
+[![Build Status](https://travis-ci.org/TheMottoRw/quickcredit.svg?branch=develop)](https://travis-ci.org/TheMottoRw/quickcredit)
 (https://travis-ci.org/themottorw/quickcredit) [![Maintainability](https://api.codeclimate.com/v1/badges/ac136a7dbfdd7bce1962/maintainability)](https://codeclimate.com/github/themottorw/quickcredit/maintainability)
 
 # Quickcredit
@@ -61,10 +61,13 @@ example request body
 }
 ```
 
-### PATCH /user/manziroger@quickcredit.com/verify
+### PATCH /user/:email/verify
 this endpoint is used to verify new user,
 
-
+example request 
+```
+/user/manziroger@quikcredit.com/verify
+```
 ### GET /loans/:id
 this enpoint is used to get specific loan with id 1
 
@@ -76,14 +79,12 @@ example request
 ### GET /loans?status=:status&repaid=:repaid
 this endpoint is used to get loans approved and not yet repaid 	
 
-
 example request url, 
 ```
 /loans?status=approved&repaid=false
 ```
 ### GET /loans?status=:status&repaid=:repaid
 this endpoint is used to get loans approved and repaid 	
-
 
 example request url, 
 ```
