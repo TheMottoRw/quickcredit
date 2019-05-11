@@ -24,7 +24,8 @@
     "nodemailer": "^6.1.1",
     "nodemon": "^1.19.0",
     "request": "^2.88.0",
-    "shortid": "^2.2.14"
+    "shortid": "^2.2.14",
+    "swagger-ui-express": "^4.0.2"
   },
   "description": "Quick credit is an online lending platform that provides short term soft loans to individuals.",
   "devDependencies": {
