@@ -18,8 +18,11 @@ npm init
 // running the server in development mode
 npm run watch
 
-// building the ploject for deployment
+// building the project for deployment
 npm run build
+
+// delete build the project folder to recreate new one
+npm run clean
 
 // running the server in production mode
 npm run start
@@ -38,9 +41,9 @@ all endpoint can be accessed from the following base url:
 https://quickcredits.herokuapp.com/api/v1/
 
 ### API Documentation url:
-```
+
 https://quickcredits.herokuapp.com/api/v1/docs
-```
+
 ### POST /auth/signup
 this endpoint is used to signup the user
 
@@ -57,6 +60,7 @@ example request body
 
 ### POST /auth/signin
 this endpoint is used to signin the user
+
 example request body
 ```
 {
@@ -66,7 +70,7 @@ example request body
 ```
 
 ### PATCH /users/:token/reset
-this endpoint is used to signin the user
+this endpoint is used to reset user password
 
 Example Url
 ```
