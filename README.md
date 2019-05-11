@@ -37,6 +37,10 @@ npm run test
 all endpoint can be accessed from the following base url:
 https://quickcredits.herokuapp.com/api/v1/
 
+### API Documentation url:
+```
+https://quickcredits.herokuapp.com/api/v1/docs
+```
 ### POST /auth/signup
 this endpoint is used to signup the user
 
@@ -58,6 +62,21 @@ example request body
 {
 	"email": "manziroger@quickcredit.com",
 	"password": "abc@123"
+}
+```
+
+### PATCH /users/:token/reset
+this endpoint is used to signin the user
+
+Example Url
+```
+/users/aXRl6xJRf/reset
+```
+example request body
+```
+{
+	"oldpassword": "123@acb",
+	"newpassword": "abc@123"
 }
 ```
 
