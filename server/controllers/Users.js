@@ -1,9 +1,7 @@
+// import nodemailer from 'nodemailer';
 import quickcredit from '../models/database';
 import { isEmailExist, generateToken } from '../helpers/userAccount';
 
-export const loadUser = (req, res) => {
-  res.send(quickcredit.users);
-};
 export const createUser = (req, res) => {
   const user = req.body;
   let response = {};
@@ -14,7 +12,7 @@ export const createUser = (req, res) => {
         error: 'Bad request,all information are required',
       },
     };
-  } else if (isEmailExist) {
+  } else if (isEmailExist(user.email)) {
     response = {
       status: 200,
       data: {
@@ -46,3 +44,4 @@ export const createUser = (req, res) => {
     };
   }
   res.status(response.status).json(response);
+};
