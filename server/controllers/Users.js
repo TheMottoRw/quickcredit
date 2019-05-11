@@ -47,6 +47,7 @@ export const createUser = (req, res) => {
     };
   }
   res.status(response.status).json(response);
+};
 export const login = (req, res) => {
   let response = {};
   const credentials = req.body;
