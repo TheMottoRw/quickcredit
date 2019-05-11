@@ -21,13 +21,13 @@ var hasLoan = function hasLoan(token) {
 exports.hasLoan = hasLoan;
 
 var interestCalculator = function interestCalculator(amount) {
-  return parseFloat(amount + amount * 5 / 100).toFixed(1);
+  return (parseFloat(amount) * 5 / 100).toFixed(1);
 };
 
 exports.interestCalculator = interestCalculator;
 
 var installementCalculator = function installementCalculator(amount, tenor) {
-  return parseFloat(((amount + interestCalculator(amount)) / tenor).toFixed(2));
+  return parseFloat(((parseFloat(amount) + parseFloat(interestCalculator(amount))) / parseInt(tenor)).toFixed(2));
 };
 
 exports.installementCalculator = installementCalculator;

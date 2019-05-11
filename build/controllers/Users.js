@@ -29,7 +29,7 @@ var createUser = function createUser(req, res) {
         error: 'Bad request,all information are required'
       }
     };
-  } else if (_userAccount.isEmailExist) {
+  } else if ((0, _userAccount.isEmailExist)(user.email)) {
     response = {
       status: 200,
       data: {
@@ -217,35 +217,6 @@ var resetPassword = function resetPassword(req, res) {
 
   res.status(response.status).json(response);
 };
-/*
-    emailSend(req,res){
-        res.send(req.body);
-        let transporter = nodeMailer.createTransport({
-            host: 'smtp.gmail.com',
-            port: 465,
-            secure: true,
-            auth: {
-                user: 'hasua.mr@gmail.com',
-                pass: 'Roger2709'
-            }
-        });
-        let mailOptions = {
-            from: '"Dj Bufu', // sender address
-            to: req.body.to, // list of receivers
-            subject: req.body.subject, // Subject line
-            text: req.body.body, // plain text body
-            html: '<b>NodeJS Email Tutorial</b>' // html body
-        }
-
-        transporter.sendMail(mailOptions, (error, info) => {
-            if (error) {
-                res.send(error);
-            }
-    res.send("Succesfull sent "+error);
-        });
-    }
-    */
-
 
 exports.resetPassword = resetPassword;
 //# sourceMappingURL=Users.js.map

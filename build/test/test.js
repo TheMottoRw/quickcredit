@@ -25,11 +25,11 @@ describe("GET ".concat(baseUrl, "/"), function () {
 
 describe("POST ".concat(baseUrl, "/auth/signup"), function () {
   it('should be able to create a new user', function (done) {
-    (0, _chai.request)(_app["default"]).post("".concat(baseUrl, "/auth/signup")).set('content-type', 'application/x-www-form-urlencoded').send({
+    (0, _chai.request)(_app["default"]).post("".concat(baseUrl, "/auth/signup")).send({
       firstName: 'Benon',
       lastName: 'Niyo',
       email: 'niyobenon@quickcredit.com',
-      password: 'niyo@123'
+      password: 'niyo$123'
     }).end(function (err, res) {
       // Expect status to Ok!
       (0, _chai.expect)(res.status).to.eql(200);
@@ -40,7 +40,7 @@ describe("POST ".concat(baseUrl, "/auth/signup"), function () {
 
 describe("POST ".concat(baseUrl, "/auth/signup"), function () {
   it('should return email already exist to other account', function (done) {
-    (0, _chai.request)(_app["default"]).post("".concat(baseUrl, "/auth/signup")).set('content-type', 'application/x-www-form-urlencoded').send({
+    (0, _chai.request)(_app["default"]).post("".concat(baseUrl, "/auth/signup")).send({
       firstName: 'Roger',
       lastName: 'Manzi',
       email: 'manziroger@quickcredit.com',
@@ -55,7 +55,7 @@ describe("POST ".concat(baseUrl, "/auth/signup"), function () {
 
 describe("POST ".concat(baseUrl, "/auth/signup"), function () {
   it('should return status of 400 due to undefined parameters', function (done) {
-    (0, _chai.request)(_app["default"]).post("".concat(baseUrl, "/auth/signup")).set('content-type', 'application/x-www-form-urlencoded').send().end(function (err, res) {
+    (0, _chai.request)(_app["default"]).post("".concat(baseUrl, "/auth/signup")).send().end(function (err, res) {
       // Expect status to Ok!
       (0, _chai.expect)(res.status).to.eql(400);
       done(err);
@@ -65,7 +65,7 @@ describe("POST ".concat(baseUrl, "/auth/signup"), function () {
 
 describe("POST ".concat(baseUrl, "/auth/signin"), function () {
   it('should return 400 error bad request some missing parameters', function (done) {
-    (0, _chai.request)(_app["default"]).post("".concat(baseUrl, "/auth/signin")).set('content-type', 'application/x-www-form-urlencoded').send().end(function (err, res) {
+    (0, _chai.request)(_app["default"]).post("".concat(baseUrl, "/auth/signin")).send().end(function (err, res) {
       // Expect status to Ok!
       (0, _chai.expect)(res.status).to.eql(400);
       done(err);
@@ -75,9 +75,9 @@ describe("POST ".concat(baseUrl, "/auth/signin"), function () {
 
 describe("POST ".concat(baseUrl, "/auth/signin"), function () {
   it('should return no data found wrong username or password', function (done) {
-    (0, _chai.request)(_app["default"]).post("".concat(baseUrl, "/auth/signin")).set('content-type', 'application/x-www-form-urlencoded').send({
+    (0, _chai.request)(_app["default"]).post("".concat(baseUrl, "/auth/signin")).send({
       email: 'manziroger@gmail.com',
-      password: 'xyz@123'
+      password: 'abc@123'
     }).end(function (err, res) {
       // Expect status to Ok!
       (0, _chai.expect)(res.status).to.eql(200);
@@ -88,7 +88,7 @@ describe("POST ".concat(baseUrl, "/auth/signin"), function () {
 
 describe("POST ".concat(baseUrl, "/auth/signin"), function () {
   it('should return account not yet verified', function (done) {
-    (0, _chai.request)(_app["default"]).post("".concat(baseUrl, "/auth/signin")).set('content-type', 'application/x-www-form-urlencoded').send({
+    (0, _chai.request)(_app["default"]).post("".concat(baseUrl, "/auth/signin")).send({
       email: 'manziroger@quickcredit.com',
       password: 'abc@123'
     }).end(function (err, res) {
@@ -101,7 +101,7 @@ describe("POST ".concat(baseUrl, "/auth/signin"), function () {
 
 describe("PATCH ".concat(baseUrl, "/users/<email>/verify"), function () {
   it('should return no data related to email', function (done) {
-    (0, _chai.request)(_app["default"]).patch("".concat(baseUrl, "/users/manziroger@gmail.com/verify")).set('content-type', 'application/x-www-form-urlencoded').send().end(function (err, res) {
+    (0, _chai.request)(_app["default"]).patch("".concat(baseUrl, "/users/manziroger@gmail.com/verify")).send().end(function (err, res) {
       // Expect status to Ok!
       (0, _chai.expect)(res.status).to.eql(200);
       done(err);
@@ -111,7 +111,7 @@ describe("PATCH ".concat(baseUrl, "/users/<email>/verify"), function () {
 
 describe("PATCH ".concat(baseUrl, "/users/<token>/reset"), function () {
   it('should  return account not yet verified', function (done) {
-    (0, _chai.request)(_app["default"]).patch("".concat(baseUrl, "/users/aXRl6xJRf/reset")).set('content-type', 'application/x-www-form-urlencoded').send({
+    (0, _chai.request)(_app["default"]).patch("".concat(baseUrl, "/users/aXRl6xJRf/reset")).send({
       oldpassword: 'abc@123',
       newpassword: '123@abc'
     }).end(function (err, res) {
@@ -124,7 +124,7 @@ describe("PATCH ".concat(baseUrl, "/users/<token>/reset"), function () {
 
 describe("PATCH ".concat(baseUrl, "/users/<token>/verify"), function () {
   it('should verify user', function (done) {
-    (0, _chai.request)(_app["default"]).patch("".concat(baseUrl, "/users/aXRl6xJRf/verify")).set('content-type', 'application/x-www-form-urlencoded').send().end(function (err, res) {
+    (0, _chai.request)(_app["default"]).patch("".concat(baseUrl, "/users/aXRl6xJRf/verify")).send().end(function (err, res) {
       // Expect status to Ok!
       (0, _chai.expect)(res.status).to.eql(200);
       done(err);
@@ -134,7 +134,7 @@ describe("PATCH ".concat(baseUrl, "/users/<token>/verify"), function () {
 
 describe("POST ".concat(baseUrl, "/auth/signin"), function () {
   it('should return logged user information', function (done) {
-    (0, _chai.request)(_app["default"]).post("".concat(baseUrl, "/auth/signin")).set('content-type', 'application/x-www-form-urlencoded').send({
+    (0, _chai.request)(_app["default"]).post("".concat(baseUrl, "/auth/signin")).send({
       email: 'manziroger@quickcredit.com',
       password: 'abc@123'
     }).end(function (err, res) {
@@ -147,7 +147,7 @@ describe("POST ".concat(baseUrl, "/auth/signin"), function () {
 
 describe("PATCH ".concat(baseUrl, "/users/<token>/reset"), function () {
   it('should  reset user password', function (done) {
-    (0, _chai.request)(_app["default"]).patch("".concat(baseUrl, "/users/aXRl6xJRfs/reset")).set('content-type', 'application/x-www-form-urlencoded').send({
+    (0, _chai.request)(_app["default"]).patch("".concat(baseUrl, "/users/aXRl6xJRfs/reset")).send({
       oldpassword: 'abc@123',
       newpassword: '123@abc'
     }).end(function (err, res) {
@@ -160,7 +160,7 @@ describe("PATCH ".concat(baseUrl, "/users/<token>/reset"), function () {
 
 describe("PATCH ".concat(baseUrl, "/users/<token>/reset"), function () {
   it('should  return 400 error code', function (done) {
-    (0, _chai.request)(_app["default"]).patch("".concat(baseUrl, "/users/aXRl6xJRf/reset")).set('content-type', 'application/x-www-form-urlencoded').send({
+    (0, _chai.request)(_app["default"]).patch("".concat(baseUrl, "/users/aXRl6xJRf/reset")).send({
       newpassword: '123@abc'
     }).end(function (err, res) {
       // Expect status to Ok!
@@ -172,7 +172,7 @@ describe("PATCH ".concat(baseUrl, "/users/<token>/reset"), function () {
 
 describe("PATCH ".concat(baseUrl, "/users/<token>/reset"), function () {
   it('should  reset user password', function (done) {
-    (0, _chai.request)(_app["default"]).patch("".concat(baseUrl, "/users/aXRl6xJRf/reset")).set('content-type', 'application/x-www-form-urlencoded').send({
+    (0, _chai.request)(_app["default"]).patch("".concat(baseUrl, "/users/aXRl6xJRf/reset")).send({
       oldpassword: 'abc@123',
       newpassword: '123@abc'
     }).end(function (err, res) {
@@ -237,7 +237,7 @@ describe("GET ".concat(baseUrl, "/loans/<id>/repayments"), function () {
 
 describe("POST ".concat(baseUrl, "/loans"), function () {
   it('should create loan application', function (done) {
-    (0, _chai.request)(_app["default"]).post("".concat(baseUrl, "/loans")).set('content-type', 'application/x-www-form-urlencoded').send({
+    (0, _chai.request)(_app["default"]).post("".concat(baseUrl, "/loans")).send({
       user: 'aXRl6xJRf',
       amount: '1200.0',
       tenor: '8'
@@ -250,7 +250,7 @@ describe("POST ".concat(baseUrl, "/loans"), function () {
 });
 describe("POST ".concat(baseUrl, "/loans"), function () {
   it('should create loan application', function (done) {
-    (0, _chai.request)(_app["default"]).post("".concat(baseUrl, "/loans")).set('content-type', 'application/x-www-form-urlencoded').send({
+    (0, _chai.request)(_app["default"]).post("".concat(baseUrl, "/loans")).send({
       user: 'aXRl6xJRf',
       amount: '1200.0',
       tenor: '8'
@@ -263,7 +263,7 @@ describe("POST ".concat(baseUrl, "/loans"), function () {
 });
 describe("PATCH ".concat(baseUrl, "/loans/<id>"), function () {
   it('should approve or reject loan application', function (done) {
-    (0, _chai.request)(_app["default"]).patch("".concat(baseUrl, "/loans/1")).set('content-type', 'application/x-www-form-urlencoded').send({
+    (0, _chai.request)(_app["default"]).patch("".concat(baseUrl, "/loans/1")).send({
       status: 'approved'
     }).end(function (err, res) {
       // Expect status to Ok!
@@ -274,7 +274,7 @@ describe("PATCH ".concat(baseUrl, "/loans/<id>"), function () {
 });
 describe("POST ".concat(baseUrl, "/loans/<id>/repayment"), function () {
   it('should repay loan', function (done) {
-    (0, _chai.request)(_app["default"]).post("".concat(baseUrl, "/loans/1/repayment")).set('content-type', 'application/x-www-form-urlencoded').send({
+    (0, _chai.request)(_app["default"]).post("".concat(baseUrl, "/loans/1/repayment")).send({
       id: 1,
       amount: '210'
     }).end(function (err, res) {

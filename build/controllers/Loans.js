@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.applications = exports.toggleStatus = exports.apply = exports.loanById = exports.loadLoans = exports.loadByCriteria = void 0;
+exports.applications = exports.toggleStatus = exports.apply = exports.loanById = exports.loadLoans = void 0;
 
 var _database = _interopRequireDefault(require("../models/database"));
 
@@ -12,43 +12,6 @@ var _userAccount = require("../helpers/userAccount");
 var _Loans = require("../helpers/Loans");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
-
-var loadByCriteria = function loadByCriteria(req, res) {
-  var response = {};
-  var criterias = req.body; // find loan with specific criterias
-
-  if (criterias.status === undefined || criterias.repaid === undefined) {
-    response = {
-      status: 400,
-      data: {
-        message: 'bad request, there might be some missing parameters'
-      }
-    };
-  } else {
-    var loan = _database["default"].loans.find(function (debt) {
-      return debt.status === criterias.status && debt.repaid === criterias.repaid;
-    });
-
-    if (loan === undefined) {
-      response = {
-        status: 200,
-        data: {
-          message: 'no data found'
-        }
-      };
-    } else {
-      // specific loan loading response
-      response = {
-        status: 200,
-        data: loan
-      };
-    }
-  }
-
-  res.status(response.status).json(response);
-};
-
-exports.loadByCriteria = loadByCriteria;
 
 var loadLoans = function loadLoans(req, res) {
   if (req.body.status === undefined && req.body.repaid === undefined) {
@@ -112,13 +75,8 @@ var apply = function apply(req, res) {
     // increment loan id for the next loan
     var userInfo = _database["default"].users.find(function (user) {
       return user.token === loan.user;
-    });
+    }); // push or add loan to an array of loans
 
-    loan.id = _database["default"].loans.length + 1;
-    loan.balance = loan.amount;
-    loan.repaid = false;
-    loan.status = 'pending';
-    loan.createdOn = new Date(); // push or add loan to an array of loans
 
     if (!(0, _userAccount.isVerified)(loan.user)) {
       response = {
@@ -135,6 +93,16 @@ var apply = function apply(req, res) {
         }
       };
     } else {
+      loan.user = userInfo.email;
+      loan.id = _database["default"].loans.length + 1;
+      loan.repaid = false;
+      loan.status = 'pending';
+      loan.createdOn = new Date();
+      loan.interest = (0, _Loans.interestCalculator)(loan.amount);
+      loan.status = 'pending';
+      loan.paymentInstallement = (0, _Loans.installementCalculator)(loan.amount, loan.tenor);
+      loan.balance = parseFloat(loan.amount) + parseFloat(loan.interest);
+
       _database["default"].loans.push(loan); // response generate
 
 
@@ -142,18 +110,17 @@ var apply = function apply(req, res) {
         status: 200,
         data: {
           id: loan.id,
-          user: userInfo.token,
+          user: loan.email,
           firstName: userInfo.firstName,
           lastName: userInfo.lastName,
-          email: userInfo.email,
           createdOn: new Date(),
           status: 'pending',
           repaid: false,
           tenor: loan.tenor,
-          amount: parseFloat(loan.amount),
-          paymentInstallement: (0, _Loans.installementCalculator)(loan.amount, loan.tenor),
-          balance: parseFloat(loan.amount),
-          interest: (0, _Loans.interestCalculator)(loan.interest)
+          amount: loan.amount,
+          paymentInstallement: loan.paymentInstallement,
+          balance: loan.balance,
+          interest: loan.interest
         }
       };
     }
@@ -167,29 +134,51 @@ exports.apply = apply;
 var toggleStatus = function toggleStatus(req, res) {
   var loanParam = req.params;
   var response = null;
+  var loanInfo = null; // response generate
 
-  var loanInfo = _database["default"].loans.find(function (loan) {
-    return loan.id === parseInt(loanParam.id);
-  }); // const loanIndex = quickcredit.loans.findIndex(loan => loan.id === parseInt(loanParam.id));
+  if (req.body.status === undefined) {
+    response = {
+      status: 400,
+      data: {
+        message: "status must be defined"
+      }
+    };
+  } else {
+    loanInfo = _database["default"].loans.find(function (loan) {
+      return loan.id === parseInt(loanParam.id);
+    });
 
+    if (loanInfo === undefined) {
+      response = {
+        status: 200,
+        data: {
+          message: "no data found for loan id ".concat(loanParam.id)
+        }
+      };
+    } else {
+      var loanIndex = _database["default"].loans.findIndex(function (loan) {
+        return loan.id === parseInt(loanParam.id);
+      });
 
-  loanInfo.status = req.query.status; // response generate
-
-  response = {
-    status: 200,
-    data: {
-      id: loanInfo.id,
-      user: loanInfo.email,
-      createdOn: loanInfo.createdOn,
-      status: loanInfo.status,
-      repaid: loanInfo.repaid,
-      tenor: loanInfo.tenor,
-      amount: loanInfo.amount,
-      paymentInstallement: loanInfo.paymentInstallement,
-      balance: loanInfo.balance,
-      interest: loanInfo.interest
+      _database["default"].loans[loanIndex].status = req.body.status;
+      response = {
+        status: 200,
+        data: {
+          id: loanInfo.id,
+          user: loanInfo.email,
+          createdOn: loanInfo.createdOn,
+          status: loanInfo.status,
+          repaid: loanInfo.repaid,
+          tenor: loanInfo.tenor,
+          amount: loanInfo.amount,
+          paymentInstallement: loanInfo.paymentInstallement,
+          balance: loanInfo.balance,
+          interest: loanInfo.interest
+        }
+      };
     }
-  };
+  }
+
   res.status(response.status).json(response);
 };
 

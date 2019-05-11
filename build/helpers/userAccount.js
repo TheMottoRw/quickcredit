@@ -44,7 +44,7 @@ var isVerified = function isVerified(token) {
   }); // is a doesnot equivalent to undefined means doesnot exist,email exist otherwise does not exist account can be created
 
 
-  return userInfo.status === 'verified';
+  return userInfo !== undefined && userInfo.status === 'verified';
 };
 
 exports.isVerified = isVerified;
