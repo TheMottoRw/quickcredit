@@ -88,7 +88,7 @@ this endpoint is used to get loans approved and repaid
 
 example request url, 
 ```
-/loans?status=approved&repaid=false
+/loans?status=approved&repaid=true
 ```
 
 ### GET /loans
@@ -116,7 +116,7 @@ example request url,
 
 request body example
 {
-	token:'sdh34j43h3439dss2df',
+	token:'aXRl6xJRf',
 	amount:1200,
 	tenor:6
 }
@@ -132,7 +132,6 @@ example request url,
 
 request body example
 {
-	loanId:'sdh34j43h3439dss2df',
 	status:'approved'
 }
 ```
