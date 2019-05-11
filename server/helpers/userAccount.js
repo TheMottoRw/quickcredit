@@ -13,8 +13,8 @@ export const isEmailExist = (email) => {
   // is a doesnot equivalent to undefined means doesnot exist,email exist otherwise does not exist account can be created
   return index !== -1;
 };
-export const isVierified = (token) => {
+export const isVerified = (token) => {
   const userInfo = quickcredit.users.find(user => user.token === token);
   // is a doesnot equivalent to undefined means doesnot exist,email exist otherwise does not exist account can be created
-  return userInfo.status === 'verified';
+  return userInfo!== undefined && userInfo.status === 'verified';
 };
