@@ -1,5 +1,5 @@
 import quickcredit from '../models/database';
-import { isVierified } from '../helpers/userAccount';
+import { isVerified } from '../helpers/userAccount';
 import { hasLoan, installementCalculator, interestCalculator } from '../helpers/Loans';
 
 export const loadLoans = (req, res) => {
@@ -37,6 +37,7 @@ export const loanById = (req, res) => {
     }
   }
   res.status(response.status).json(response);
+};
 export const apply = (req, res) => {
   const loan = req.body;
   let response = null;
@@ -50,13 +51,8 @@ export const apply = (req, res) => {
   } else {
   // increment loan id for the next loan
     const userInfo = quickcredit.users.find(user => user.token === loan.user);
-    loan.id = quickcredit.loans.length + 1;
-    loan.balance = loan.amount;
-    loan.repaid = false;
-    loan.status = 'pending';
-    loan.createdOn = new Date();
     // push or add loan to an array of loans
-    if (!isVierified(loan.user)) {
+    if (!isVerified(loan.user)) {
       response = {
         status: 200,
         data: {
@@ -71,24 +67,32 @@ export const apply = (req, res) => {
         },
       };
     } else {
+      loan.user = userInfo.email;
+      loan.id = quickcredit.loans.length + 1;
+      loan.repaid = false;
+      loan.status = 'pending';
+      loan.createdOn = new Date();
+      loan.interest = interestCalculator(loan.amount);
+      loan.status = 'pending';
+      loan.paymentInstallement = installementCalculator(loan.amount, loan.tenor);
+      loan.balance = parseFloat(loan.amount) + parseFloat(loan.interest);
       quickcredit.loans.push(loan);
       // response generate
       response = {
         status: 200,
         data: {
           id: loan.id,
-          user: userInfo.token,
+          user: loan.email,
           firstName: userInfo.firstName,
           lastName: userInfo.lastName,
-          email: userInfo.email,
           createdOn: new Date(),
           status: 'pending',
           repaid: false,
           tenor: loan.tenor,
-          amount: parseFloat(loan.amount),
-          paymentInstallement: installementCalculator(loan.amount, loan.tenor),
-          balance: parseFloat(loan.amount),
-          interest: interestCalculator(loan.interest),
+          amount: loan.amount,
+          paymentInstallement: loan.paymentInstallement,
+          balance: loan.balance,
+          interest: loan.interest,
         },
       };
     }
@@ -98,25 +102,44 @@ export const apply = (req, res) => {
 export const toggleStatus = (req, res) => {
   const loanParam = req.params;
   let response = null;
-  const loanInfo = quickcredit.loans.find(loan => loan.id === parseInt(loanParam.id));
-  // const loanIndex = quickcredit.loans.findIndex(loan => loan.id === parseInt(loanParam.id));
-  loanInfo.status = req.query.status;
+  let loanInfo = null;
   // response generate
-  response = {
-    status: 200,
-    data: {
-      id: loanInfo.id,
-      user: loanInfo.email,
-      createdOn: loanInfo.createdOn,
-      status: loanInfo.status,
-      repaid: loanInfo.repaid,
-      tenor: loanInfo.tenor,
-      amount: loanInfo.amount,
-      paymentInstallement: loanInfo.paymentInstallement,
-      balance: loanInfo.balance,
-      interest: loanInfo.interest,
-    },
-  };
+  if( req.body.status === undefined) {
+    response = {
+      status: 400,
+      data: {
+        message: "status must be defined",
+      },
+    };  
+  }else {
+      loanInfo = quickcredit.loans.find(loan => loan.id === parseInt(loanParam.id));
+    if(loanInfo === undefined) {
+      response = {
+        status: 200,
+        data: {
+          message: `no data found for loan id ${loanParam.id}`,
+        },
+      };  
+    } else {
+      const loanIndex = quickcredit.loans.findIndex(loan => loan.id === parseInt(loanParam.id));
+      quickcredit.loans[loanIndex].status = req.body.status;
+      response = {
+        status: 200,
+        data: {
+          id: loanInfo.id,
+          user: loanInfo.email,
+          createdOn: loanInfo.createdOn,
+          status: loanInfo.status,
+          repaid: loanInfo.repaid,
+          tenor: loanInfo.tenor,
+          amount: loanInfo.amount,
+          paymentInstallement: loanInfo.paymentInstallement,
+          balance: loanInfo.balance,
+          interest: loanInfo.interest,
+        },
+      };
+    }
+}
   res.status(response.status).json(response);
 };
 export const applications = (req, res) => {
