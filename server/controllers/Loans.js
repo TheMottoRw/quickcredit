@@ -1,5 +1,5 @@
 import quickcredit from '../models/database';
-import { isVierified } from '../helpers/userAccount';
+import { isVerified } from '../helpers/userAccount';
 import { hasLoan, installementCalculator, interestCalculator } from '../helpers/Loans';
 
 export const loadLoans = (req, res) => {
@@ -51,13 +51,8 @@ export const apply = (req, res) => {
   } else {
   // increment loan id for the next loan
     const userInfo = quickcredit.users.find(user => user.token === loan.user);
-    loan.id = quickcredit.loans.length + 1;
-    loan.balance = loan.amount;
-    loan.repaid = false;
-    loan.status = 'pending';
-    loan.createdOn = new Date();
     // push or add loan to an array of loans
-    if (!isVierified(loan.user)) {
+    if (!isVerified(loan.user)) {
       response = {
         status: 200,
         data: {
@@ -72,24 +67,32 @@ export const apply = (req, res) => {
         },
       };
     } else {
+      loan.user = userInfo.email;
+      loan.id = quickcredit.loans.length + 1;
+      loan.repaid = false;
+      loan.status = 'pending';
+      loan.createdOn = new Date();
+      loan.interest = interestCalculator(loan.amount);
+      loan.status = 'pending';
+      loan.paymentInstallement = installementCalculator(loan.amount, loan.tenor);
+      loan.balance = parseFloat(loan.amount) + parseFloat(loan.interest);
       quickcredit.loans.push(loan);
       // response generate
       response = {
         status: 200,
         data: {
           id: loan.id,
-          user: userInfo.token,
+          user: loan.email,
           firstName: userInfo.firstName,
           lastName: userInfo.lastName,
-          email: userInfo.email,
           createdOn: new Date(),
           status: 'pending',
           repaid: false,
           tenor: loan.tenor,
-          amount: parseFloat(loan.amount),
-          paymentInstallement: installementCalculator(loan.amount, loan.tenor),
-          balance: parseFloat(loan.amount),
-          interest: interestCalculator(loan.interest),
+          amount: loan.amount,
+          paymentInstallement: loan.paymentInstallement,
+          balance: loan.balance,
+          interest: loan.interest,
         },
       };
     }
