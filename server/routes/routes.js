@@ -9,6 +9,9 @@ const router = express.Router();
 const version = 'v1';
 const baseUrl = `/api/${version}`;
 
+router.get(`${baseUrl}/`, (req, res) => {
+  res.send('Welcome to Quickcredit App');
+});
 router.post(`${baseUrl}/auth/signup`, createUser);
 router.post(`${baseUrl}/auth/signin`, login);
 router.get(`${baseUrl}/users`, loadUser);
