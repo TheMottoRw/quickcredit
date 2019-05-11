@@ -1,28 +1,5 @@
 import quickcredit from '../models/database';
 
-export const loadRepayment = (req, res) => {
-  const repayParam = req.params;
-  let response = null;
-  if (repayParam.id === undefined) {
-    response = {
-      status: 400,
-      data: {
-        message: 'bad request, there might be some missing parameters',
-      },
-    };
-  } else {
-    response = {
-      status: 200,
-      data: quickcredit.repayments.find(transaction => parseInt(transaction.loanId) === parseInt(repayParam.id)),
-    };
-  }
-  res.json(response);
-};
-export const repaymentById = (req, res) => {
-  const repayInfo = quickcredit.body;
-  const repaymentInfo = quickcredit.repayments.find(transaction => transaction.id === repayInfo.id);
-  res.json(repaymentInfo);
-}
 export const repay = (req, res) => {
   const repayment = req.params;
   let response = null;
@@ -60,20 +37,20 @@ export const repay = (req, res) => {
           message: 'sorry loan application not yet approved',
         },
       };
-    } else if (parseFloat(loanInfo.paymentInstallment) !== parseFloat(repayment.amount)) {
+    } else if (parseFloat(loanInfo.paymentInstallement) !== parseFloat(req.body.amount)) {
       response = {
         status: 200,
         data: {
-          message: `amount paid does not match to installement payment paid ${repayment.amount} installement payment must be ${loanInfo.paymentInstallment}`,
+          message: `amount paid does not match to installement payment paid ${req.body.amount} installement payment must be ${loanInfo.paymentInstallement}`,
         },
       };
     } else {
       // set up repayment parameters to be pushed int repayments array entity
-      const nwBalance = parseFloat(loanInfo.balance) - parseFloat(repayment.amount);
+      const nwBalance = parseFloat(loanInfo.balance) - parseFloat(req.body.amount);
       const repayInfo = {
         id: repayment.repayid,
         loanId: parseInt(repayment.id),
-        amount: repayment.amount,
+        amount: req.body.amount,
         oldBalance: parseFloat(loanInfo.balance),
         newBalance: nwBalance,
         createdOn: new Date(),
@@ -95,8 +72,8 @@ export const repay = (req, res) => {
           amount: loanInfo.amount,
           createdOn: loanInfo.createdOn,
           interest: loanInfo.interest,
-          monthlyInstallement: loanInfo.paymentInstallment,
-          paidAmount: repayment.amount,
+          monthlyInstallement: loanInfo.paymentInstallement,
+          paidAmount: req.body.amount,
           balance: loanInfo.balance,
         },
       };
