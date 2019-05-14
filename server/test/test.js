@@ -27,7 +27,7 @@ describe(`POST ${baseUrl}/auth/signup`, () => {
       .send({ firstName: 'Benon', lastName: 'Niyo', email: 'niyobenon@quickcredit.com', password: 'niyo$123' })
       .end((err, res) => {
       // Expect status to Ok!
-        expect(res.status).to.eql(200);
+        expect(res.status).to.eql(201);
         done(err);
       });
   });
@@ -40,7 +40,7 @@ describe(`POST ${baseUrl}/auth/signup`, () => {
       .send({ firstName: 'Roger', lastName: 'Manzi', email: 'manziroger@quickcredit.com', password: 'abc@123' })
       .end((err, res) => {
       // Expect status to Ok!
-        expect(res.status).to.eql(200);
+        expect(res.status).to.eql(409);
         done(err);
       });
   });
@@ -79,7 +79,7 @@ describe(`POST ${baseUrl}/auth/signin`, () => {
       .send({ email: 'manziroger@gmail.com', password: 'abc@123' })
       .end((err, res) => {
       // Expect status to Ok!
-        expect(res.status).to.eql(200);
+        expect(res.status).to.eql(404);
         done(err);
       });
   });
@@ -92,7 +92,7 @@ describe(`POST ${baseUrl}/auth/signin`, () => {
       .send({ email: 'manziroger@quickcredit.com', password: 'abc@123' })
       .end((err, res) => {
       // Expect status to Ok!
-        expect(res.status).to.eql(200);
+        expect(res.status).to.eql(403);
         done(err);
       });
   });
@@ -105,7 +105,7 @@ describe(`PATCH ${baseUrl}/users/<email>/verify`, () => {
       .send()
       .end((err, res) => {
       // Expect status to Ok!
-        expect(res.status).to.eql(200);
+        expect(res.status).to.eql(404);
         done(err);
       });
   });
@@ -118,17 +118,17 @@ describe(`PATCH ${baseUrl}/users/<token>/reset`, () => {
       .send({ oldpassword: 'abc@123', newpassword: '123@abc' })
       .end((err, res) => {
       // Expect status to Ok!
-        expect(res.status).to.eql(200);
+        expect(res.status).to.eql(403);
         done(err);
       });
   });
 });
 
-// test with valid token it will verify user
-describe(`PATCH ${baseUrl}/users/<token>/verify`, () => {
+// test with valid email it will verify user
+describe(`PATCH ${baseUrl}/users/<email>/verify`, () => {
   it('should verify user', (done) => {
     request(app)
-      .patch(`${baseUrl}/users/aXRl6xJRf/verify`)
+      .patch(`${baseUrl}/users/manziroger@quickcredit.com/verify`)
       .send()
       .end((err, res) => {
       // Expect status to Ok!
@@ -158,7 +158,7 @@ describe(`PATCH ${baseUrl}/users/<token>/reset`, () => {
       .send({ oldpassword: 'abc@123', newpassword: '123@abc' })
       .end((err, res) => {
       // Expect status to Ok!
-        expect(res.status).to.eql(200);
+        expect(res.status).to.eql(404);
         done(err);
       });
   });
@@ -191,10 +191,10 @@ describe(`PATCH ${baseUrl}/users/<token>/reset`, () => {
 });
 // End users account tests
 describe(`GET ${baseUrl}/loans`, () => {
-  it('should of loan by status and repayment application', (done) => {
+  it('should return loan by status and repayment application', (done) => {
     request(app)
       .get(`${baseUrl}/loans`)
-      .send({ status: 'pending', repaid: true })
+      .send({ status: 'pending', repaid: false })
       .end((err, res) => {
       // Expect status to Ok!
         expect(res.status).to.eql(200);
@@ -203,7 +203,7 @@ describe(`GET ${baseUrl}/loans`, () => {
   });
 });
 describe(`GET ${baseUrl}/loans`, () => {
-  it('should no data ', (done) => {
+  it('should loan information data ', (done) => {
     request(app)
       .get(`${baseUrl}/loans`)
       .send({ status: 'rejected', repaid: true })
@@ -258,19 +258,7 @@ describe(`POST ${baseUrl}/loans`, () => {
       .send({ user: 'aXRl6xJRf', amount: '1200.0', tenor: '8' })
       .end((err, res) => {
       // Expect status to Ok!
-        expect(res.status).to.eql(200);
-        done(err);
-      });
-  });
-});
-describe(`POST ${baseUrl}/loans`, () => {
-  it('should create loan application', (done) => {
-    request(app)
-      .post(`${baseUrl}/loans`)
-      .send({ user: 'aXRl6xJRf', amount: '1200.0', tenor: '8' })
-      .end((err, res) => {
-      // Expect status to Ok!
-        expect(res.status).to.eql(200);
+        expect(res.status).to.eql(409);
         done(err);
       });
   });
@@ -291,7 +279,7 @@ describe(`POST ${baseUrl}/loans/<id>/repayment`, () => {
   it('should repay loan', (done) => {
     request(app)
       .post(`${baseUrl}/loans/1/repayment`)
-      .send({ id: 1, amount: '210' })
+      .send({ amount: 210.0 })
       .end((err, res) => {
       // Expect status to Ok!
         expect(res.status).to.eql(200);
