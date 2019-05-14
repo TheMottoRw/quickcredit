@@ -19,7 +19,7 @@ export const createUser = (req, res) => {
     };
   } else if (isEmailExist(user.email)) {
     response = {
-      status: 200,
+      status: 409,
       data: {
         message: 'email already exist to other account',
       },
@@ -35,7 +35,7 @@ export const createUser = (req, res) => {
     quickcredit.users.push(user);
     // response generate
     response = {
-      status: 200,
+      status: 201,
       data: {
         id: user.id,
         token: user.token,
@@ -65,14 +65,14 @@ export const login = (req, res) => {
     const userInfo = quickcredit.users.find(user => user.email === credentials.email && user.password === credentials.password);
     if (userInfo === undefined) {
       response = {
-        status: 200,
+        status: 404,
         data: {
           message: 'No data found, wrong username or password',
         },
       };
     } else if (userInfo.status === 'unverified') {
       response = {
-        status: 200,
+        status: 403,
         data: {
           message: 'sorry your account not yet verified,wait for a moment...!',
         },
@@ -114,7 +114,7 @@ export const toggleVerification = (req, res) => {
     const userIndex = userInfo.findIndex(user => user.email === userEmail);
     if (userIndex === -1) {
       response = {
-        status: 200,
+        status: 404,
         data: {
           message: `No data related to ${userEmail} found`,
         },
@@ -155,14 +155,14 @@ export const resetPassword = (req, res) => {
     const userIndex = userInfo.findIndex(user => (user.token === req.params.token && user.password === userParams.oldpassword));
     if (userIndex === -1) {
       response = {
-        status: 200,
+        status: 404,
         data: {
           message: 'No data related to your token found',
         },
       };
     } else if (userInfo[userIndex].status === 'unverified') {
       response = {
-        status: 200,
+        status: 403,
         data: {
           message: 'sorry your account not yet verified, wait for a moment...!',
         },

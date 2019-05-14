@@ -54,14 +54,14 @@ export const apply = (req, res) => {
     // push or add loan to an array of loans
     if (!isVerified(loan.user)) {
       response = {
-        status: 200,
+        status: 403,
         data: {
           message: 'sorry your account not yet verified, wait for a moment',
         },
       };
     } else if (hasLoan(loan.user)) {
       response = {
-        status: 200,
+        status: 409,
         data: {
           message: 'sorry you already have a loan',
         },
@@ -79,7 +79,7 @@ export const apply = (req, res) => {
       quickcredit.loans.push(loan);
       // response generate
       response = {
-        status: 200,
+        status: 201,
         data: {
           id: loan.id,
           user: loan.email,
@@ -115,7 +115,7 @@ export const toggleStatus = (req, res) => {
       loanInfo = quickcredit.loans.find(loan => loan.id === parseInt(loanParam.id));
     if(loanInfo === undefined) {
       response = {
-        status: 200,
+        status: 404,
         data: {
           message: `no data found for loan id ${loanParam.id}`,
         },

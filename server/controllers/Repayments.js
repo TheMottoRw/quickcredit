@@ -11,17 +11,46 @@ export const loadRepayment = (req, res) => {
       },
     };
   } else {
-    response = {
-      status: 200,
-      data: quickcredit.repayments.find(transaction => parseInt(transaction.loanId) === parseInt(repayParam.id)),
-    };
+    let repayInfo = [];
+    quickcredit.repayments.find((transaction) => {
+      if (parseInt(transaction.loanId) === parseInt(repayParam.id)) {
+        repayInfo.push(transaction);
+      }
+    });
+    if (repayInfo === []) {
+      response = {
+        status: 404,
+        data: {
+          message: `no repayment information found for loan ${repayParam.id}`,
+        },
+      };
+    } else {
+      response = {
+        status: 200,
+        data: repayInfo,
+      };
+    }
   }
   res.json(response);
 };
 export const repaymentById = (req, res) => {
   const repayInfo = quickcredit.body;
   const repaymentInfo = quickcredit.repayments.find(transaction => transaction.id === repayInfo.id);
-  res.json(repaymentInfo);
+  let response = null;
+  if(repaymentInfo === undefined) {
+    response = {
+      status: 404,
+      data: {
+        message: `no repayment information found repayment id ${repayInfo.id}`,
+      },
+    };
+  } else {
+    response = {
+      status: 200,
+      data: repaymentInfo,
+    };
+  }
+  res.status(response.status).json(response);
 };
 export const repay = (req, res) => {
   const repayment = req.params;
@@ -48,16 +77,23 @@ export const repay = (req, res) => {
     const loanIndex = quickcredit.loans.findIndex(loan => loan.id === parseInt(repayment.id));
     if (loanIndex === -1) {
       response = {
-        status: 200,
+        status: 404,
         data: {
           message: 'loan specified not exist',
         },
       };
     } else if (loanInfo.status === 'pending') {
       response = {
-        status: 200,
+        status: 403,
         data: {
           message: 'sorry loan application not yet approved',
+        },
+      };
+    } else if (loanInfo.repaid === true && loanInfo.balance === 0) {
+      response = {
+        status: 406,
+        data: {
+          message: 'sorry loan already repaid',
         },
       };
     } else if (parseFloat(loanInfo.paymentInstallement) !== parseFloat(req.body.amount)) {
