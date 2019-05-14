@@ -121,14 +121,17 @@ li a {
   padding: 14px 16px;
   text-decoration: none;
   font-weight: bold;
-  font-size: 18px;
+	font-size: 18px;
+	font-family: Arial, Helvetica, sans-serif;
 }
 
 li a:hover {
-  background-color: blue;
+	background-color: rgba(30,168,166,0.4);
+	border-bottom: solid white 3px;
 }
 .active{
-	background-color:orange; 
+	background-color:rgba(30,168,166,0.4);
+	border-bottom: solid white 3px;
 }
 /*Responsive layout*/
 * { box-sizing: border-box;}
@@ -380,7 +383,7 @@ font-size: 16px;
 	width: 80px;
 }
 .list-actions .reject{
-	background-color: #ff2360;
+	background-color: rgba(200, 200, 31, 1);/*rgba(27, 68, 152, 0.98)*/
 	float: right;
 }
 .text-status{
