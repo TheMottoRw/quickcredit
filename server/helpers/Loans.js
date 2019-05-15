@@ -8,3 +8,16 @@ export const hasLoan = (token) => {
 };
 export const interestCalculator = (amount => ((parseFloat(amount) * 5) / 100).toFixed(1));
 export const installementCalculator = (amount, tenor) => parseFloat(((parseFloat(amount) + parseFloat(interestCalculator(amount))) / parseInt(tenor)).toFixed(2));
+export const missingParameter = (requiredParameterArray, passedParameterObj) => {
+  let missing = "";
+  for(let d of requiredParameterArray) {
+    if (!passedParameterObj.hasOwnProperty(d)) {
+      if(missing === "") {
+        missing+=d.toString();
+      } else {
+        missing += " and "+d.toString();
+      }
+    };
+  }
+  return missing;
+}

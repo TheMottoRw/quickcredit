@@ -10,11 +10,22 @@ export const generateToken = () => {
 };
 export const isEmailExist = (email) => {
   const index = quickcredit.users.findIndex(user => user.email === email);
-  // is a doesnot equivalent to undefined means doesnot exist,email exist otherwise does not exist account can be created
   return index !== -1;
 };
 export const isVerified = (token) => {
   const userInfo = quickcredit.users.find(user => user.token === token);
-  // is a doesnot equivalent to undefined means doesnot exist,email exist otherwise does not exist account can be created
   return userInfo!== undefined && userInfo.status === 'verified';
 };
+export const missingParameter = (requiredParameterArray, passedParameterObj) => {
+  let missing = "";
+  for(let d of requiredParameterArray) {
+    if (!passedParameterObj.hasOwnProperty(d)) {
+      if(missing === "") {
+        missing+=d.toString();
+      } else {
+        missing += " and "+d.toString();
+      }
+    };
+  }
+  return missing;
+}
