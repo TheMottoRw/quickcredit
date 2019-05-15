@@ -1,23 +1,22 @@
-
 // import nodemailer from 'nodemailer';
 import quickcredit from '../models/database';
-import { isEmailExist, generateToken } from '../helpers/userAccount';
+import { isEmailExist, generateToken, missingParameter } from '../helpers/userAccount';
 
 export const loadUser = (req, res) => {
   res.send(quickcredit.users);
 };
 
 export const createUser = (req, res) => {
-  const user = req.body;
+  const {body: { firstName, lastName, email, password } } = req;
   let response = {};
-  if (!user.firstName || !user.lastName || !user.email || !user.password) {
+  if (!firstName || !lastName || !email || !password) {
     response = {
       status: 400,
       data: {
-        error: 'Bad request,all information are required',
+        error: ` ${missingParameter(['firstName','lastName','email','password'],req.body)} must be provided`,
       },
     };
-  } else if (isEmailExist(user.email)) {
+  } else if (isEmailExist(email)) {
     response = {
       status: 409,
       data: {
@@ -25,26 +24,36 @@ export const createUser = (req, res) => {
       },
     };
   } else {
-    // increment user id for the next user
-    user.id = quickcredit.users.length + 1;
-    user.token = generateToken();
-    user.status = 'unverfied';
-    user.createdOn = new Date();
-    user.isAdmin = false;
-    // push or add user to an array of users
-    quickcredit.users.push(user);
-    // response generate
+    const id = quickcredit.users.length + 1;
+    const token = generateToken();
+    const status = 'unverified';
+    const createdOn = new Date();
+    const isAdmin = false;
+    
+    quickcredit.users.push({
+      'id': id,
+      'token': token,
+      'firstName': firstName,
+      'lastName': lastName,
+      'email': email,
+      'password': password,
+      'status': status,
+      'createdOn': createdOn,
+      'isAdmin': isAdmin
+    });
+    
     response = {
       status: 201,
       data: {
-        id: user.id,
-        token: user.token,
-        firstName: user.firstName,
-        lastName: user.lastName,
-        email: user.email,
-        password: user.password,
-        status: user.status,
-        createdOn: user.createdOn,
+        id: id,
+        token: token,
+        firstName: firstName,
+        lastName: lastName,
+        email: email,
+        password: password,
+        status: status,
+        createdOn: createdOn,
+        isAdmin: isAdmin,
       },
     };
   }
@@ -52,33 +61,31 @@ export const createUser = (req, res) => {
 };
 export const login = (req, res) => {
   let response = {};
-  const credentials = req.body;
-  if (credentials.email === undefined || credentials.password === undefined) {
+  const { email, password }  = req.body;
+  if (email === undefined || password === undefined) {
     response = {
       status: 400,
       data: {
-        error: 'Bad request,might be some missing paramaters',
+        error: `${missingParameter(['email', 'password'], req.body )} must be provided`,
       },
     };
   } else {
-    // find user with provided credentials and user is verfiied
-    const userInfo = quickcredit.users.find(user => user.email === credentials.email && user.password === credentials.password);
+    const userInfo = quickcredit.users.find(user => user.email === email && user.password === password);
     if (userInfo === undefined) {
       response = {
-        status: 404,
+        status: 401,
         data: {
-          message: 'No data found, wrong username or password',
+          message: 'Wrong username or password',
         },
       };
     } else if (userInfo.status === 'unverified') {
       response = {
         status: 403,
         data: {
-          message: 'sorry your account not yet verified,wait for a moment...!',
+          message: 'Sorry your account not yet verified,contact admin...!',
         },
       };
     } else {
-      // login response specifications
       response = {
         status: 200,
         data: {
@@ -98,31 +105,27 @@ export const login = (req, res) => {
   res.status(response.status).json(response);
 };
 export const toggleVerification = (req, res) => {
-  // getting user information from email
   let response = {};
-  const userEmail = req.params.email;
+  const { email } = req.params;
   const userInfo = quickcredit.users;
-  if (!req.params.email === undefined) {
+  if (email === undefined) {
     response = {
       status: 400,
       data: {
-        message: 'Bad request,user email must be defined',
+        message: 'email must be provided',
       },
     };
   } else {
-  // load userId using account number
-    const userIndex = userInfo.findIndex(user => user.email === userEmail);
+    const userIndex = userInfo.findIndex(user => user.email === email);
     if (userIndex === -1) {
       response = {
         status: 404,
         data: {
-          message: `No data related to ${userEmail} found`,
+          message: `No record found for this email ${email}`,
         },
       };
     } else {
-    // updating account based on account index
       userInfo[userIndex].status = 'verified';
-      // response object
       response = {
         status: 200,
         data: {
@@ -139,38 +142,34 @@ export const toggleVerification = (req, res) => {
   res.status(response.status).json(response);
 };
 export const resetPassword = (req, res) => {
-  // getting user information from url
   let response = {};
-  const userParams = req.body;
+  const { body: { oldpassword, newpassword }, params: { token } } = req;
   const userInfo = quickcredit.users;
-  if (!userParams.oldpassword || !userParams.newpassword || !req.params.token) {
+  if (!oldpassword || !newpassword || !token) {
     response = {
       status: 400,
       data: {
-        message: 'Bad request, there might be some missing parameters',
+        message: `${missingParameter(['token'],req.params)} ${missingParameter(['oldpassword','newpassword'], req.body)} must be provided`,
       },
     };
   } else {
-  // load userId using token and password
-    const userIndex = userInfo.findIndex(user => (user.token === req.params.token && user.password === userParams.oldpassword));
+    const userIndex = userInfo.findIndex(user => (user.token === token && user.password === oldpassword));
     if (userIndex === -1) {
       response = {
         status: 404,
         data: {
-          message: 'No data related to your token found',
+          message: `No user record found for token ${token}`,
         },
       };
     } else if (userInfo[userIndex].status === 'unverified') {
       response = {
         status: 403,
         data: {
-          message: 'sorry your account not yet verified, wait for a moment...!',
+          message: 'Sorry your account not yet verified,contact admin',
         },
       };
     } else {
-    // updating account based on account index
-      userInfo[userIndex].password = userParams.newpassword;
-      // response object
+      userInfo[userIndex].password = newpassword;
       response = {
         status: 200,
         data: userInfo[userIndex],

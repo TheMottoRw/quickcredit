@@ -1,18 +1,44 @@
 import quickcredit from '../models/database';
 import { isVerified } from '../helpers/userAccount';
-import { hasLoan, installementCalculator, interestCalculator } from '../helpers/Loans';
+import { hasLoan, installementCalculator, interestCalculator, missingParameter } from '../helpers/Loans';
 
 export const loadLoans = (req, res) => {
-  if (req.body.status === undefined && req.body.repaid === undefined) {
+  const { status, repaid } = req.body;
+  if (status === undefined && repaid === undefined) {
     res.json(quickcredit.loans);
   } else {
     loadByCriteria(req, res);
   }
 };
+export const loadByCriteria = (req, res) => {
+let {status, repaid } = req.query;
+let loanInfo = [];
+let response = null;
+quickcredit.loans.find((loan) => {
+  if (loan.status === status && loan.repaid === repaid) {
+    loanInfo.push(loan);
+  }
+});
+if (loanInfo === []) {
+  response = {
+    status: 404,
+    data: {
+      message: `no loan record found for status ${status} and repaid ${repaid} specifications`,
+    },
+  };
+} else {
+  response = {
+    status: 200,
+    data: loanInfo,
+  };
+};
+res.status(response.status).json(response);
+}
 export const loanById = (req, res) => {
   const loanInfo = quickcredit.loans;
   let response = null;
-  if (req.params.id === undefined) {
+  const { id } = req.params;
+  if (id === undefined) {
     response = {
       status: 400,
       data: {
@@ -20,13 +46,12 @@ export const loanById = (req, res) => {
       },
     };
   } else {
-    const loanid = req.params.id;
-    const specificLoan = loanInfo.find(loan => loan.id === parseInt(loanid));
+    const specificLoan = loanInfo.find(loan => loan.id === parseInt(id));
     if (specificLoan === undefined) {
       response = {
-        status: 200,
+        status: 404,
         data: {
-          message: 'no data found',
+          message: `no loan record found for id ${id}`,
         },
       };
     } else {
@@ -39,45 +64,45 @@ export const loanById = (req, res) => {
   res.status(response.status).json(response);
 };
 export const apply = (req, res) => {
-  const loan = req.body;
+  const { user, amount, tenor } = req.body;
   let response = null;
-  if (loan.user === undefined || loan.amount === undefined || loan.tenor === undefined) {
+  if (user === undefined || amount === undefined || tenor === undefined) {
     response = {
       status: 400,
       data: {
-        message: 'Bad request, there might be some missing parameters',
+        message: ` ${missingParameter(['user','amount','tenor'], req.body)} must be provided`,
       },
     };
   } else {
-  // increment loan id for the next loan
-    const userInfo = quickcredit.users.find(user => user.token === loan.user);
-    // push or add loan to an array of loans
-    if (!isVerified(loan.user)) {
+    const userInfo = quickcredit.users.find(usr => usr.token === user);
+    if (!isVerified(user)) {
       response = {
         status: 403,
         data: {
-          message: 'sorry your account not yet verified, wait for a moment',
+          message: 'sorry your account not yet verified, contact admin',
         },
       };
-    } else if (hasLoan(loan.user)) {
+    } else if (hasLoan(user)) {
       response = {
-        status: 409,
+        status: 403,
         data: {
           message: 'sorry you already have a loan',
         },
       };
     } else {
-      loan.user = userInfo.email;
-      loan.id = quickcredit.loans.length + 1;
-      loan.repaid = false;
-      loan.status = 'pending';
-      loan.createdOn = new Date();
-      loan.interest = interestCalculator(loan.amount);
-      loan.status = 'pending';
-      loan.paymentInstallement = installementCalculator(loan.amount, loan.tenor);
-      loan.balance = parseFloat(loan.amount) + parseFloat(loan.interest);
+      const interest = interestCalculator(amount);
+      const loan={
+        'id': quickcredit.loans.length + 1,
+        'user': userInfo.email,
+        'repaid': false,
+        'status': 'pending',
+        'createdOn': new Date(),
+        'interest': interest,
+        'status': 'pending',
+        'paymentInstallement': installementCalculator(amount, tenor),
+        'balance': parseFloat(amount) + parseFloat(interest)
+      }
       quickcredit.loans.push(loan);
-      // response generate
       response = {
         status: 201,
         data: {
@@ -100,29 +125,28 @@ export const apply = (req, res) => {
   res.status(response.status).json(response);
 };
 export const toggleStatus = (req, res) => {
-  const loanParam = req.params;
+  const { body: { status }, params: { id } } = req;
   let response = null;
   let loanInfo = null;
-  // response generate
-  if( req.body.status === undefined) {
+  if( status === undefined) {
     response = {
       status: 400,
       data: {
-        message: "status must be defined",
+        message: "status must be provided",
       },
     };  
   }else {
-      loanInfo = quickcredit.loans.find(loan => loan.id === parseInt(loanParam.id));
+      loanInfo = quickcredit.loans.find(loan => loan.id === parseInt(id));
     if(loanInfo === undefined) {
       response = {
         status: 404,
         data: {
-          message: `no data found for loan id ${loanParam.id}`,
+          message: `no record found for loan id ${id}`,
         },
       };  
     } else {
-      const loanIndex = quickcredit.loans.findIndex(loan => loan.id === parseInt(loanParam.id));
-      quickcredit.loans[loanIndex].status = req.body.status;
+      const loanIndex = quickcredit.loans.findIndex(loan => loan.id === parseInt(id));
+      quickcredit.loans[loanIndex].status = status;
       response = {
         status: 200,
         data: {
@@ -143,12 +167,12 @@ export const toggleStatus = (req, res) => {
   res.status(response.status).json(response);
 };
 export const applications = (req, res) => {
-  const parameters = req.query;
+  const {status, repaid} = req.query;
   let loanApplication = null;
-  if (parameters.status === undefined && parameters.repaid === undefined) {
+  if (status === undefined && repaid === undefined) {
     loanApplication = quickcredit.loans;
   } else {
-    loanApplication = quickcredit.loans.find(loan => loan.status === parameters.status && loan.repaid === (parameters.repaid === 'true'));
+    loanApplication = quickcredit.loans.find(loan => loan.status === status && loan.repaid === (repaid === 'true'));
   }
   res.json(loanApplication);
 };
