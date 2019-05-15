@@ -3,7 +3,7 @@ import quickcredit from '../models/database';
 import { isEmailExist, generateToken, missingParameter } from '../helpers/userAccount';
 
 export const loadUser = (req, res) => {
-  res.send(quickcredit.users);
+  res.json({status: 200, data: quickcredit.users });
 };
 
 export const createUser = (req, res) => {

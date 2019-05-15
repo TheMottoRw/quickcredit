@@ -1,5 +1,4 @@
 import quickcredit from '../models/database';
-import {missingParameter} from '../helpers/Loans';
 export const loadRepayment = (req, res) => {
   const { id } = req.params;
   let response = null;

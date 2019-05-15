@@ -97,10 +97,11 @@ export const apply = (req, res) => {
         'repaid': false,
         'status': 'pending',
         'createdOn': new Date(),
-        'interest': interest,
-        'status': 'pending',
+        'amount': amount,
+        'tenor': tenor,
         'paymentInstallement': installementCalculator(amount, tenor),
-        'balance': parseFloat(amount) + parseFloat(interest)
+        'balance': parseFloat(amount) + parseFloat(interest),
+        'interest': interest
       }
       quickcredit.loans.push(loan);
       response = {
