@@ -1,42 +1,45 @@
-const apiTest = {
+const quickcredit = {
   users: [
     {
       id: 1,
-      email: 'cyemezo@quickcredit.com',
-      firstNname: 'Aimable ',
-      lastName: 'Cyemezo',
-      password: 'abc@xyz',
-      address: 'Nyagatare',
+      token: 'aXRl6xJRf',
+      email: 'manziroger@quickcredit.com',
+      firstName: 'Roger ',
+      lastName: 'Manzi',
+      password: 'abc@123',
+      address: 'Nyarugenge,Kigali city',
       status: 'unverified',
       isAdmin: false,
+      createdOn: '2019-04-23 12:23',
     },
   ],
 
   loans: [
     {
       id: 1,
-      user: 'cyemezo@quickcredit.com',
-      createdOn: '21-02-2019',
+      user: 'manziroger@quickcredit.com',
+      createdOn: '2019-04-11',
       status: 'pending',
       repaid: false,
-      tenor: 8,
-      amount: 1500.0,
-      paymentInstallment: 280.0,
-      balance: 1100.0,
-      Interest: 250.0,
+      tenor: 6,
+      amount: 1200.0,
+      paymentInstallment: 210.0,
+      balance: 1050.0,
+      Interest: 60.0,
     },
   ],
 
   repayments: [
     {
       id: 1,
-      createdOn: '13-03-2019',
+      createdOn: '12-02-2019',
       loanId: 1,
-      amount: 210,
-      oldBalance: 1100,
-      newBalance: 850,
+      monthlyInstallement: 210,
+      interest : 75.0,
+      paidAmount: 210,
+      balance: 1050
     },
   ],
 };
 
-export default apiTest;
+export default quickcredit;
