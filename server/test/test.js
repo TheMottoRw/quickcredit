@@ -73,13 +73,13 @@ describe(`POST ${baseUrl}/auth/signin`, () => {
 });
 // test invalid user login credential
 describe(`POST ${baseUrl}/auth/signin`, () => {
-  it('should return no data found wrong username or password', (done) => {
+  it('should return Wrong username or password', (done) => {
     request(app)
       .post(`${baseUrl}/auth/signin`)
       .send({ email: 'manziroger@gmail.com', password: 'abc@123' })
       .end((err, res) => {
       // Expect status to Ok!
-        expect(res.status).to.eql(404);
+        expect(res.status).to.eql(401);
         done(err);
       });
   });
@@ -252,13 +252,13 @@ describe(`GET ${baseUrl}/loans/<id>/repayments`, () => {
 });
 // test loan applications
 describe(`POST ${baseUrl}/loans`, () => {
-  it('should create loan application', (done) => {
+  it('should return forbidden', (done) => {
     request(app)
       .post(`${baseUrl}/loans`)
       .send({ user: 'aXRl6xJRf', amount: '1200.0', tenor: '8' })
       .end((err, res) => {
       // Expect status to Ok!
-        expect(res.status).to.eql(409);
+        expect(res.status).to.eql(403);
         done(err);
       });
   });
