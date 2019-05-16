@@ -21,7 +21,7 @@ export const createUser = (req, res) => {
     response = {
       status: 200,
       data: {
-        message: 'email already exist to other account',
+        message: 'Email already exist to other account',
       },
     };
   } else {
@@ -74,7 +74,7 @@ export const login = (req, res) => {
       response = {
         status: 200,
         data: {
-          message: 'sorry your account not yet verified,wait for a moment...!',
+          message: 'Sorry your account not yet verified,wait for a moment...!',
         },
       };
     } else {
@@ -164,7 +164,7 @@ export const resetPassword = (req, res) => {
       response = {
         status: 200,
         data: {
-          message: 'sorry your account not yet verified, wait for a moment...!',
+          message: 'Sorry your account not yet verified, wait for a moment...!',
         },
       };
     } else {
