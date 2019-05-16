@@ -23,7 +23,7 @@ if (loanInfo === []) {
   response = {
     status: 404,
     data: {
-      message: `no loan record found for status ${status} and repaid ${repaid} specifications`,
+      message: `No loan record found for status ${status} and repaid ${repaid} specifications`,
     },
   };
 } else {
@@ -42,7 +42,7 @@ export const loanById = (req, res) => {
     response = {
       status: 400,
       data: {
-        message: 'bad request, id must be defined',
+        message: 'Bad request, id must be defined',
       },
     };
   } else {
@@ -51,7 +51,7 @@ export const loanById = (req, res) => {
       response = {
         status: 404,
         data: {
-          message: `no loan record found for id ${id}`,
+          message: `No loan record found for id ${id}`,
         },
       };
     } else {
@@ -79,14 +79,14 @@ export const apply = (req, res) => {
       response = {
         status: 403,
         data: {
-          message: 'sorry your account not yet verified, contact admin',
+          message: 'Sorry your account not yet verified, contact admin',
         },
       };
     } else if (hasLoan(user)) {
       response = {
         status: 403,
         data: {
-          message: 'sorry you already have a loan',
+          message: 'Sorry you already have a loan',
         },
       };
     } else {
@@ -133,7 +133,7 @@ export const toggleStatus = (req, res) => {
     response = {
       status: 400,
       data: {
-        message: "status must be provided",
+        message: "Status must be provided",
       },
     };  
   }else {
@@ -142,7 +142,7 @@ export const toggleStatus = (req, res) => {
       response = {
         status: 404,
         data: {
-          message: `no record found for loan id ${id}`,
+          message: `No record found for loan id ${id}`,
         },
       };  
     } else {
