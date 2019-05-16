@@ -106,7 +106,6 @@ export const login = (req, res) => {
       };
     } else {
       const newtoken = generateJwtToken(email);
-      res.json(userIndex);
       quickcredit.users[userIndex].token = newtoken;
       response = {
         status: 200,
