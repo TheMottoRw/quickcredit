@@ -9,6 +9,7 @@ export const loadLoans = (req, res) => {
     loadByCriteria(req, res);
   }
 };
+
 export const loanById = (req, res) => {
   const loanInfo = quickcredit.loans;
   let response = null;
@@ -38,6 +39,7 @@ export const loanById = (req, res) => {
   }
   res.status(response.status).json(response);
 };
+
 export const apply = (req, res) => {
   const loan = req.body;
   let response = null;
@@ -99,6 +101,7 @@ export const apply = (req, res) => {
   }
   res.status(response.status).json(response);
 };
+
 export const toggleStatus = (req, res) => {
   const loanParam = req.params;
   let response = null;
@@ -142,6 +145,7 @@ export const toggleStatus = (req, res) => {
 }
   res.status(response.status).json(response);
 };
+
 export const applications = (req, res) => {
   const parameters = req.query;
   let loanApplication = null;
