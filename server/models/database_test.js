@@ -6,7 +6,7 @@ const quickcredit = {
       email: 'manziroger@quickcredit.com',
       firstName: 'Roger ',
       lastName: 'Manzi',
-      password: 'abc@123',
+      password: '$2b$10$xw4YrkSKwQBEkHGY7sj6gOWlso48RzUcwa.0BKqbHVvZXHDSlrr6m',
       address: 'Nyarugenge,Kigali city',
       status: 'unverified',
       isAdmin: false,
