@@ -1,6 +1,8 @@
 import quickcredit from '../models/database';
+import { validateLoanRepay } from '../middlewares/validator';
 export const loadRepayment = (req, res) => {
   const { id } = req.params;
+  const result = validateLoanRepay(req.params);
   let response = null;
   if (id === undefined) {
     response = {
@@ -9,7 +11,12 @@ export const loadRepayment = (req, res) => {
         message: 'Id must be provided',
       },
     };
-  } else {
+  } else if (result.error !== null) {
+    response = {
+        status: 200,
+        message:result.error.details[0].message, 
+    };
+} else {
     let repayInfo = [];
     quickcredit.repayments.find((transaction) => {
       if (parseInt(transaction.loanId) === parseInt(id)) {
@@ -32,6 +39,7 @@ export const loadRepayment = (req, res) => {
   }
   res.json(response);
 };
+
 export const repaymentById = (req, res) => {
   const { id } = quickcredit.body;
   const repaymentInfo = quickcredit.repayments.find(transaction => transaction.id === id);
@@ -51,15 +59,17 @@ export const repaymentById = (req, res) => {
   }
   res.status(response.status).json(response);
 };
+
 export const repay = (req, res) => {
   const { body: { amount }, params: { id } } = req;
   let response = null;
+  const result = validateLoanRepay({ amount: amount, id: id });
   const repayid = quickcredit.repayments.length + 1;
   if (id === undefined) {
     response = {
       status: 400,
       data: {
-        message: `id must be provided`,
+        message: `Id must be provided`,
       },
     };
   } else if (amount === undefined) {
@@ -69,7 +79,12 @@ export const repay = (req, res) => {
         message: 'Amount must be provided',
       },
     };
-  } else {
+  }else if (result.error !== null) {
+    response = {
+        status: 200,
+        message:result.error.details[0].message, 
+    };
+}  else {
     const loanInfo = quickcredit.loans.find(loan => loan.id === parseInt(id));
     const loanIndex = quickcredit.loans.findIndex(loan => loan.id === parseInt(id));
     if (loanIndex === -1) {
@@ -88,12 +103,12 @@ export const repay = (req, res) => {
       };
     } else if (loanInfo.repaid === true && loanInfo.balance === 0) {
       response = {
-        status: 406,
+        status: 403,
         data: {
           message: 'Sorry loan already repaid',
         },
       };
-    } else if (parseFloat(loanInfo.paymentInstallement) !== parseFloat(amount)) {
+    } else if (parseFloat(loanInfo.paymentInstallement) !== parseFloat(amount) && parseFloat(loanInfo.balance) !== parseFloat(amount)) {
       response = {
         status: 200,
         data: {
