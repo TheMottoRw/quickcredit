@@ -6,7 +6,7 @@ export const loadRepayment = (req, res) => {
     response = {
       status: 400,
       data: {
-        message: 'id must be provided',
+        message: 'Id must be provided',
       },
     };
   } else {
@@ -66,7 +66,7 @@ export const repay = (req, res) => {
     response = {
       status: 400,
       data: {
-        message: 'amount must be provided',
+        message: 'Amount must be provided',
       },
     };
   } else {
@@ -76,7 +76,7 @@ export const repay = (req, res) => {
       response = {
         status: 404,
         data: {
-          message: 'given loan id does not exist',
+          message: 'Given loan id does not exist',
         },
       };
     } else if (loanInfo.status === 'pending') {
@@ -97,7 +97,7 @@ export const repay = (req, res) => {
       response = {
         status: 200,
         data: {
-          message: `amount paid does not match to installement payment paid ${amount} installement payment must be ${loanInfo.paymentInstallement}`,
+          message: `Amount paid does not match to installement payment paid ${amount} installement payment must be ${loanInfo.paymentInstallement}`,
         },
       };
     } else {
