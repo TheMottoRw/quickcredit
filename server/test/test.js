@@ -19,6 +19,7 @@ describe(`GET ${baseUrl}/`, () => {
       });
   });
 });
+
 // successfull test register new user
 describe(`POST ${baseUrl}/auth/signup`, () => {
   it('should be able to create a new user', (done) => {
@@ -32,6 +33,7 @@ describe(`POST ${baseUrl}/auth/signup`, () => {
       });
   });
 });
+
 // test with already existing user email
 describe(`POST ${baseUrl}/auth/signup`, () => {
   it('should return email already exist to other account', (done) => {
@@ -45,6 +47,7 @@ describe(`POST ${baseUrl}/auth/signup`, () => {
       });
   });
 });
+
 // test with undefined parameters
 describe(`POST ${baseUrl}/auth/signup`, () => {
   it('should return status of 400 due to undefined parameters', (done) => {
@@ -58,6 +61,7 @@ describe(`POST ${baseUrl}/auth/signup`, () => {
       });
   });
 });
+
 // test with some missing parameters
 describe(`POST ${baseUrl}/auth/signin`, () => {
   it('should return 400 error bad request some missing parameters', (done) => {
@@ -71,6 +75,7 @@ describe(`POST ${baseUrl}/auth/signin`, () => {
       });
   });
 });
+
 // test invalid user login credential
 describe(`POST ${baseUrl}/auth/signin`, () => {
   it('should return no data found wrong username or password', (done) => {
@@ -84,6 +89,7 @@ describe(`POST ${baseUrl}/auth/signin`, () => {
       });
   });
 });
+
 // test with unverfiied user login credential
 describe(`POST ${baseUrl}/auth/signin`, () => {
   it('should return account not yet verified', (done) => {
@@ -97,6 +103,7 @@ describe(`POST ${baseUrl}/auth/signin`, () => {
       });
   });
 });
+
 // test with noo-exist email user
 describe(`PATCH ${baseUrl}/users/<email>/verify`, () => {
   it('should return no data related to email', (done) => {
@@ -110,6 +117,7 @@ describe(`PATCH ${baseUrl}/users/<email>/verify`, () => {
       });
   });
 });
+
 // test reset before user verified
 describe(`PATCH ${baseUrl}/users/<token>/reset`, () => {
   it('should  return account not yet verified', (done) => {
@@ -137,6 +145,7 @@ describe(`PATCH ${baseUrl}/users/<token>/verify`, () => {
       });
   });
 });
+
 // test with verified user login credential
 describe(`POST ${baseUrl}/auth/signin`, () => {
   it('should return logged user information', (done) => {
@@ -150,6 +159,7 @@ describe(`POST ${baseUrl}/auth/signin`, () => {
       });
   });
 });
+
 // test reset password with invalid token fail
 describe(`PATCH ${baseUrl}/users/<token>/reset`, () => {
   it('should  reset user password', (done) => {
@@ -163,6 +173,7 @@ describe(`PATCH ${baseUrl}/users/<token>/reset`, () => {
       });
   });
 });
+
 // test with missing parameters
 describe(`PATCH ${baseUrl}/users/<token>/reset`, () => {
   it('should  return 400 error code', (done) => {
@@ -176,6 +187,7 @@ describe(`PATCH ${baseUrl}/users/<token>/reset`, () => {
       });
   });
 });
+
 // test reset password successful pass
 describe(`PATCH ${baseUrl}/users/<token>/reset`, () => {
   it('should  reset user password', (done) => {
@@ -189,6 +201,7 @@ describe(`PATCH ${baseUrl}/users/<token>/reset`, () => {
       });
   });
 });
+
 // End users account tests
 describe(`GET ${baseUrl}/loans`, () => {
   it('should of loan by status and repayment application', (done) => {
@@ -202,6 +215,7 @@ describe(`GET ${baseUrl}/loans`, () => {
       });
   });
 });
+
 describe(`GET ${baseUrl}/loans`, () => {
   it('should no data ', (done) => {
     request(app)
@@ -214,6 +228,7 @@ describe(`GET ${baseUrl}/loans`, () => {
       });
   });
 });
+
 describe(`GET ${baseUrl}/loans/<id>`, () => {
   it('should return loan by with id specified', (done) => {
     request(app)
@@ -226,6 +241,7 @@ describe(`GET ${baseUrl}/loans/<id>`, () => {
       });
   });
 });
+
 describe(`GET ${baseUrl}/loans`, () => {
   it('should list all pending loan application', (done) => {
     request(app)
@@ -238,6 +254,7 @@ describe(`GET ${baseUrl}/loans`, () => {
       });
   });
 });
+
 describe(`GET ${baseUrl}/loans/<id>/repayments`, () => {
   it('should return repayment history', (done) => {
     request(app)
@@ -250,6 +267,7 @@ describe(`GET ${baseUrl}/loans/<id>/repayments`, () => {
       });
   });
 });
+
 // test loan applications
 describe(`POST ${baseUrl}/loans`, () => {
   it('should create loan application', (done) => {
@@ -263,6 +281,7 @@ describe(`POST ${baseUrl}/loans`, () => {
       });
   });
 });
+
 describe(`POST ${baseUrl}/loans`, () => {
   it('should create loan application', (done) => {
     request(app)
@@ -275,6 +294,7 @@ describe(`POST ${baseUrl}/loans`, () => {
       });
   });
 });
+
 describe(`PATCH ${baseUrl}/loans/<id>`, () => {
   it('should approve or reject loan application', (done) => {
     request(app)
@@ -287,6 +307,7 @@ describe(`PATCH ${baseUrl}/loans/<id>`, () => {
       });
   });
 });
+
 describe(`POST ${baseUrl}/loans/<id>/repayment`, () => {
   it('should repay loan', (done) => {
     request(app)
