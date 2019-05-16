@@ -69,17 +69,16 @@ example request body
 }
 ```
 
-### PATCH /users/:token/reset
+### PATCH /users/:email/reset
 this endpoint is used to reset user password
 
 Example Url
 ```
-/users/aXRl6xJRf/reset
+/users/manziroger@quickcredit/reset
 ```
 example request body
 ```
 {
-	"oldpassword": "123@acb",
 	"newpassword": "abc@123"
 }
 ```
@@ -104,6 +103,8 @@ this endpoint is used to get loans approved and not yet repaid
 
 example request url, 
 ```
+
+/loans?status=pending
 /loans?status=approved&repaid=false
 ```
 ### GET /loans?status=:status&repaid=:repaid
@@ -139,7 +140,6 @@ example request url,
 
 request body example
 {
-	token:'aXRl6xJRf',
 	amount:1200,
 	tenor:6
 }
@@ -167,7 +167,6 @@ example request url,
 
 request body example
 {
-	loanId: 1,
 	amount: 210
 }
 ```
