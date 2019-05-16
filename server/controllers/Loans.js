@@ -34,6 +34,7 @@ if (loanInfo === []) {
 };
 res.status(response.status).json(response);
 }
+
 export const loanById = (req, res) => {
   const loanInfo = quickcredit.loans;
   let response = null;
@@ -63,6 +64,7 @@ export const loanById = (req, res) => {
   }
   res.status(response.status).json(response);
 };
+
 export const apply = (req, res) => {
   const { user, amount, tenor } = req.body;
   let response = null;
@@ -125,6 +127,7 @@ export const apply = (req, res) => {
   }
   res.status(response.status).json(response);
 };
+
 export const toggleStatus = (req, res) => {
   const { body: { status }, params: { id } } = req;
   let response = null;
@@ -167,6 +170,7 @@ export const toggleStatus = (req, res) => {
 }
   res.status(response.status).json(response);
 };
+
 export const applications = (req, res) => {
   const {status, repaid} = req.query;
   let loanApplication = null;

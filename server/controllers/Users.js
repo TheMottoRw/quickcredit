@@ -59,6 +59,7 @@ export const createUser = (req, res) => {
   }
   res.status(response.status).json(response);
 };
+
 export const login = (req, res) => {
   let response = {};
   const { email, password }  = req.body;
@@ -104,6 +105,7 @@ export const login = (req, res) => {
   }
   res.status(response.status).json(response);
 };
+
 export const toggleVerification = (req, res) => {
   let response = {};
   const { email } = req.params;
@@ -141,6 +143,7 @@ export const toggleVerification = (req, res) => {
   }
   res.status(response.status).json(response);
 };
+
 export const resetPassword = (req, res) => {
   let response = {};
   const { body: { oldpassword, newpassword }, params: { token } } = req;
