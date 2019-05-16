@@ -7,7 +7,7 @@ export const loadRepayment = (req, res) => {
     response = {
       status: 400,
       data: {
-        message: 'bad request, there might be some missing parameters',
+        message: 'Bad request, there might be some missing parameters',
       },
     };
   } else {
@@ -32,14 +32,14 @@ export const repay = (req, res) => {
     response = {
       status: 400,
       data: {
-        message: 'bad request, loan id must defined',
+        message: 'Bad request, loan id must defined',
       },
     };
   } else if (req.body.amount === undefined) {
     response = {
       status: 400,
       data: {
-        message: 'bad request,repayment amount must defined',
+        message: 'Bad request,repayment amount must defined',
       },
     };
   } else {
@@ -50,21 +50,21 @@ export const repay = (req, res) => {
       response = {
         status: 200,
         data: {
-          message: 'loan specified not exist',
+          message: 'Loan specified not exist',
         },
       };
     } else if (loanInfo.status === 'pending') {
       response = {
         status: 200,
         data: {
-          message: 'sorry loan application not yet approved',
+          message: 'Sorry loan application not yet approved',
         },
       };
     } else if (parseFloat(loanInfo.paymentInstallement) !== parseFloat(req.body.amount)) {
       response = {
         status: 200,
         data: {
-          message: `amount paid does not match to installement payment paid ${req.body.amount} installement payment must be ${loanInfo.paymentInstallement}`,
+          message: `Amount paid does not match to installement payment paid ${req.body.amount} installement payment must be ${loanInfo.paymentInstallement}`,
         },
       };
     } else {
