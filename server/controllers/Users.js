@@ -20,7 +20,7 @@ export const createUser = (req, res) => {
     response = {
       status: 409,
       data: {
-        message: 'email already exist to other account',
+        message: 'Email already exist to other account',
       },
     };
   } else {
@@ -112,7 +112,7 @@ export const toggleVerification = (req, res) => {
     response = {
       status: 400,
       data: {
-        message: 'email must be provided',
+        message: 'Email must be provided',
       },
     };
   } else {
