@@ -16,7 +16,7 @@ export const loanById = (req, res) => {
     response = {
       status: 400,
       data: {
-        message: 'bad request, id must be defined',
+        message: 'Bad request, id must be defined',
       },
     };
   } else {
@@ -26,7 +26,7 @@ export const loanById = (req, res) => {
       response = {
         status: 200,
         data: {
-          message: 'no data found',
+          message: 'No data found',
         },
       };
     } else {
@@ -56,14 +56,14 @@ export const apply = (req, res) => {
       response = {
         status: 200,
         data: {
-          message: 'sorry your account not yet verified, wait for a moment',
+          message: 'Sorry your account not yet verified, wait for a moment',
         },
       };
     } else if (hasLoan(loan.user)) {
       response = {
         status: 200,
         data: {
-          message: 'sorry you already have a loan',
+          message: 'Sorry you already have a loan',
         },
       };
     } else {
@@ -108,7 +108,7 @@ export const toggleStatus = (req, res) => {
     response = {
       status: 400,
       data: {
-        message: "status must be defined",
+        message: "Status must be defined",
       },
     };  
   }else {
@@ -117,7 +117,7 @@ export const toggleStatus = (req, res) => {
       response = {
         status: 200,
         data: {
-          message: `no data found for loan id ${loanParam.id}`,
+          message: `No data found for loan id ${loanParam.id}`,
         },
       };  
     } else {
