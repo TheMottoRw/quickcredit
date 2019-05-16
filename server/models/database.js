@@ -34,9 +34,10 @@ const quickcredit = {
       id: 1,
       createdOn: '12-02-2019',
       loanId: 1,
-      amount: 210,
-      oldBalance: 1260, // current balance before minus paid amount monthly installement
-      newBalance: 1050, // (loan + interest) - currently paid amount
+      monthlyInstallement: 210,
+      interest : 75.0,
+      paidAmount: 210,
+      balance: 1050
     },
   ],
 };

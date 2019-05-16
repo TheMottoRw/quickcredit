@@ -1,104 +1,130 @@
 import quickcredit from '../models/database';
-
 export const loadRepayment = (req, res) => {
-  const repayParam = req.params;
+  const { id } = req.params;
   let response = null;
-  if (repayParam.id === undefined) {
+  if (id === undefined) {
     response = {
       status: 400,
       data: {
-        message: 'Bad request, there might be some missing parameters',
+        message: 'Id must be provided',
+      },
+    };
+  } else {
+    let repayInfo = [];
+    quickcredit.repayments.find((transaction) => {
+      if (parseInt(transaction.loanId) === parseInt(id)) {
+        repayInfo.push(transaction);
+      }
+    });
+    if (repayInfo === []) {
+      response = {
+        status: 404,
+        data: {
+          message: `No repayment information found for loan ${id}`,
+        },
+      };
+    } else {
+      response = {
+        status: 200,
+        data: repayInfo,
+      };
+    }
+  }
+  res.json(response);
+};
+export const repaymentById = (req, res) => {
+  const { id } = quickcredit.body;
+  const repaymentInfo = quickcredit.repayments.find(transaction => transaction.id === id);
+  let response = null;
+  if(repaymentInfo === undefined) {
+    response = {
+      status: 404,
+      data: {
+        message: `No record found for repayment id ${id}`,
       },
     };
   } else {
     response = {
       status: 200,
-      data: quickcredit.repayments.find(transaction => parseInt(transaction.loanId) === parseInt(repayParam.id)),
+      data: repaymentInfo,
     };
   }
-  res.json(response);
+  res.status(response.status).json(response);
 };
-
-export const repaymentById = (req, res) => {
-  const repayInfo = quickcredit.body;
-  const repaymentInfo = quickcredit.repayments.find(transaction => transaction.id === repayInfo.id);
-  res.json(repaymentInfo);
-};
-
 export const repay = (req, res) => {
-  const repayment = req.params;
+  const { body: { amount }, params: { id } } = req;
   let response = null;
-  // increment repayment id for the next repayment
-  repayment.repayid = quickcredit.repayments.length + 1;
-  if (repayment.id === undefined) {
+  const repayid = quickcredit.repayments.length + 1;
+  if (id === undefined) {
     response = {
       status: 400,
       data: {
-        message: 'Bad request, loan id must defined',
+        message: `id must be provided`,
       },
     };
-  } else if (req.body.amount === undefined) {
+  } else if (amount === undefined) {
     response = {
       status: 400,
       data: {
-        message: 'Bad request,repayment amount must defined',
+        message: 'Amount must be provided',
       },
     };
   } else {
-  // get loan information and index based on loan id passed
-    const loanInfo = quickcredit.loans.find(loan => loan.id === parseInt(repayment.id));
-    const loanIndex = quickcredit.loans.findIndex(loan => loan.id === parseInt(repayment.id));
+    const loanInfo = quickcredit.loans.find(loan => loan.id === parseInt(id));
+    const loanIndex = quickcredit.loans.findIndex(loan => loan.id === parseInt(id));
     if (loanIndex === -1) {
       response = {
-        status: 200,
+        status: 404,
         data: {
-          message: 'Loan specified not exist',
+          message: 'Given loan id does not exist',
         },
       };
     } else if (loanInfo.status === 'pending') {
       response = {
-        status: 200,
+        status: 403,
         data: {
           message: 'Sorry loan application not yet approved',
         },
       };
-    } else if (parseFloat(loanInfo.paymentInstallement) !== parseFloat(req.body.amount)) {
+    } else if (loanInfo.repaid === true && loanInfo.balance === 0) {
+      response = {
+        status: 406,
+        data: {
+          message: 'Sorry loan already repaid',
+        },
+      };
+    } else if (parseFloat(loanInfo.paymentInstallement) !== parseFloat(amount)) {
       response = {
         status: 200,
         data: {
-          message: `Amount paid does not match to installement payment paid ${req.body.amount} installement payment must be ${loanInfo.paymentInstallement}`,
+          message: `Amount paid does not match to installement payment paid ${amount} installement payment must be ${loanInfo.paymentInstallement}`,
         },
       };
     } else {
-      // set up repayment parameters to be pushed int repayments array entity
-      const nwBalance = parseFloat(loanInfo.balance) - parseFloat(req.body.amount);
+      const nwBalance = parseFloat(loanInfo.balance) - parseFloat(amount);
       const repayInfo = {
-        id: repayment.repayid,
-        loanId: parseInt(repayment.id),
-        amount: req.body.amount,
+        id: repayid,
+        loanId: parseInt(id),
+        amount: amount,
         oldBalance: parseFloat(loanInfo.balance),
         newBalance: nwBalance,
         createdOn: new Date(),
       };
-      // pushing repayment transaction into entity
       quickcredit.repayments.push(repayInfo);
-      // update loan as repayment done
       quickcredit.loans[loanIndex].balance = nwBalance;
-      // check new balance become  zero change loan statu to repaid
       if (nwBalance === 0) {
         quickcredit.loans[loanIndex].repaid = true;
       }
-      // response generate
       response = {
-        status: 200,
+        status: 201,
         data: {
-          id: repayment.repayid,
-          loanId: repayment.id,
+          id: repayid,
+          loanId: id,
           amount: loanInfo.amount,
           createdOn: loanInfo.createdOn,
           interest: loanInfo.interest,
           monthlyInstallement: loanInfo.paymentInstallement,
-          paidAmount: req.body.amount,
+          paidAmount: amount,
           balance: loanInfo.balance,
         },
       };
