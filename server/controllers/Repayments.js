@@ -108,11 +108,11 @@ export const repay = (req, res) => {
           message: 'Sorry loan already repaid',
         },
       };
-    } else if (parseFloat(loanInfo.paymentInstallement) !== parseFloat(amount) && parseFloat(loanInfo.balance) !== parseFloat(amount)) {
+    } else if (parseFloat(loanInfo.paymentInstallement) < parseFloat(amount) && (parseFloat(loanInfo.balance) - parseFloat(amount)) !== 0) {
       response = {
         status: 200,
         data: {
-          message: `Amount paid does not match to installement payment paid ${amount} installement payment must be ${loanInfo.paymentInstallement}`,
+          message: `Amount paid does not match to installement payment, paid amount ${amount} installement payment must be ${loanInfo.paymentInstallement} or greater`,
         },
       };
     } else {

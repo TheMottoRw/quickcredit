@@ -254,7 +254,7 @@ export const applications = (req, res) => {
     response = {
       status: 403,
       data: {
-        message: 'You must be an admin to verify user',
+        message: 'You must be an admin to view all loans',
       },
     };
   } else 
