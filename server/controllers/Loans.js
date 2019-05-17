@@ -1,8 +1,10 @@
 import quickcredit from '../models/database';
 import { isVerified } from '../helpers/userAccount';
 import { hasLoan, installementCalculator, interestCalculator, missingParameter } from '../helpers/Loans';
+import { validateLoanByStatus, validateSpecificLoan, validateLoanApply, validateLoanToggle } from '../middlewares/validator';
 
 export const loadLoans = (req, res) => {
+  res.json(req.body);
   const { status, repaid } = req.body;
   if (status === undefined && repaid === undefined) {
     res.json(quickcredit.loans);
@@ -10,15 +12,45 @@ export const loadLoans = (req, res) => {
     loadByCriteria(req, res);
   }
 };
+
 export const loadByCriteria = (req, res) => {
 let {status, repaid } = req.query;
+const result = validateLoanByStatus(req.query);
 let loanInfo = [];
 let response = null;
-quickcredit.loans.find((loan) => {
-  if (loan.status === status && loan.repaid === repaid) {
-    loanInfo.push(loan);
-  }
-});
+const isAdmin = quickcredit.users.find(user => user.token === req.headers['authorization']).isAdmin;
+if (!isAdmin) {
+  response = {
+    status: 403,
+    data: {
+      message: 'You must be an admin to view loan report',
+    },
+  };
+} else if (result.error !== null) {
+    response = {
+        status: 200,
+        message:result.error.details[0].message, 
+    };
+  } else {
+   if( status === undefined && repaid !== undefined) {
+    quickcredit.loans.find((loan) => {
+      if (loan.repaid === repaid) {
+        loanInfo.push(loan);
+      }
+    });
+  } else if(status !== undefined && repaid === undefined ) {
+    quickcredit.loans.find((loan) => {
+      if (loan.status === status) {
+        loanInfo.push(loan);
+      }
+    });  
+  } else {
+    quickcredit.loans.find((loan) => {
+      if (loan.status === status && loan.repaid === (repaid === "true")) {
+        loanInfo.push(loan);
+      }
+    });
+}
 if (loanInfo === []) {
   response = {
     status: 404,
@@ -32,6 +64,7 @@ if (loanInfo === []) {
     data: loanInfo,
   };
 };
+};
 res.status(response.status).json(response);
 }
 
@@ -39,14 +72,28 @@ export const loanById = (req, res) => {
   const loanInfo = quickcredit.loans;
   let response = null;
   const { id } = req.params;
-  if (id === undefined) {
+  const result = validateSpecificLoan({ id: id});
+  const isAdmin = quickcredit.users.find(user => user.token === req.headers['authorization']).isAdmin;
+  if (!isAdmin) {
+    response = {
+      status: 403,
+      data: {
+        message: 'You must be an admin to view specific loan',
+      },
+    };
+  } else if (id === undefined) {
     response = {
       status: 400,
       data: {
         message: 'Bad request, id must be defined',
       },
     };
-  } else {
+  } else if (result.error !== null) {
+    response = {
+        status: 200,
+        message:result.error.details[0].message, 
+    };
+} else {
     const specificLoan = loanInfo.find(loan => loan.id === parseInt(id));
     if (specificLoan === undefined) {
       response = {
@@ -66,16 +113,23 @@ export const loanById = (req, res) => {
 };
 
 export const apply = (req, res) => {
-  const { user, amount, tenor } = req.body;
+  const { amount, tenor } = req.body;
+  const result = validateLoanApply(req.body);
   let response = null;
-  if (user === undefined || amount === undefined || tenor === undefined) {
+  if (amount === undefined || tenor === undefined) {
     response = {
       status: 400,
       data: {
-        message: ` ${missingParameter(['user','amount','tenor'], req.body)} must be provided`,
+        message: ` ${missingParameter(['amount','tenor'], req.body)} must be provided`,
       },
     };
-  } else {
+  } else if (result.error !== null) {
+    response = {
+        status: 200,
+        message:result.error.details[0].message, 
+    };
+} else {
+    const user = req.headers['authorization'];
     const userInfo = quickcredit.users.find(usr => usr.token === user);
     if (!isVerified(user)) {
       response = {
@@ -131,21 +185,42 @@ export const apply = (req, res) => {
 export const toggleStatus = (req, res) => {
   const { body: { status }, params: { id } } = req;
   let response = null;
+  const result = validateLoanToggle({ status: status, id: id});
   let loanInfo = null;
-  if( status === undefined) {
+  const isAdmin = quickcredit.users.find(user => user.token === req.headers['authorization']).isAdmin;
+  if (!isAdmin) {
+    response = {
+      status: 403,
+      data: {
+        message: 'You must be an admin to approve loan application',
+      },
+    };
+  } else if( status === undefined) {
     response = {
       status: 400,
       data: {
         message: "Status must be provided",
       },
     };  
-  }else {
+  } else if (result.error !== null) {
+    response = {
+        status: 200,
+        message:result.error.details[0].message, 
+    };
+} else {
       loanInfo = quickcredit.loans.find(loan => loan.id === parseInt(id));
     if(loanInfo === undefined) {
       response = {
         status: 404,
         data: {
           message: `No record found for loan id ${id}`,
+        },
+      };  
+    } else if(loanInfo.status === 'approved' && status === 'approved') {
+      response = {
+        status: 403,
+        data: {
+          message: `Loan application already approved, you can not reapprove`,
         },
       };  
     } else {
@@ -174,10 +249,19 @@ export const toggleStatus = (req, res) => {
 export const applications = (req, res) => {
   const {status, repaid} = req.query;
   let loanApplication = null;
+  const isAdmin = quickcredit.users.find(user => user.token === req.headers['authorization']).isAdmin;
+  if (!isAdmin) {
+    response = {
+      status: 403,
+      data: {
+        message: 'You must be an admin to view all loans',
+      },
+    };
+  } else 
   if (status === undefined && repaid === undefined) {
     loanApplication = quickcredit.loans;
+    res.json(loanApplication);
   } else {
-    loanApplication = quickcredit.loans.find(loan => loan.status === status && loan.repaid === (repaid === 'true'));
+    loadByCriteria(req, res);
   }
-  res.json(loanApplication);
 };

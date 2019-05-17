@@ -1,14 +1,17 @@
 // import nodemailer from 'nodemailer';
 import quickcredit from '../models/database';
-import { isEmailExist, generateToken, missingParameter } from '../helpers/userAccount';
+import { isEmailExist, generateToken, generateJwtToken, missingParameter, encryptPassword, isEncryptedEqualPlainPassword } from '../helpers/userAccount';
+import { validateSignup, validateSignin, validateResetPassword, validateVerifyUser } from '../middlewares/validator';
+import { isNull } from 'util';
 
 export const loadUser = (req, res) => {
   res.json({status: 200, data: quickcredit.users });
 };
 
 export const createUser = (req, res) => {
-  const {body: { firstName, lastName, email, password } } = req;
+  const { body: { firstName, lastName, email, password } } = req;
   let response = {};
+  const result = validateSignup({ firstName: firstName, lastName: lastName,  email: email, password: password});
   if (!firstName || !lastName || !email || !password) {
     response = {
       status: 400,
@@ -16,7 +19,12 @@ export const createUser = (req, res) => {
         error: ` ${missingParameter(['firstName','lastName','email','password'],req.body)} must be provided`,
       },
     };
-  } else if (isEmailExist(email)) {
+  } else if (!isNull(result.error)) {
+    response = {
+        status: 200,
+        message:result.error.details[0].message, 
+    };
+} else if (isEmailExist(email)) {
     response = {
       status: 409,
       data: {
@@ -25,10 +33,11 @@ export const createUser = (req, res) => {
     };
   } else {
     const id = quickcredit.users.length + 1;
-    const token = generateToken();
+    const token = generateJwtToken(email);
     const status = 'unverified';
+    const pwd = encryptPassword(password);
     const createdOn = new Date();
-    const isAdmin = false;
+    const isAdmin = email.split('@')[0] === 'admin';
     
     quickcredit.users.push({
       'id': id,
@@ -36,7 +45,7 @@ export const createUser = (req, res) => {
       'firstName': firstName,
       'lastName': lastName,
       'email': email,
-      'password': password,
+      'password': pwd,
       'status': status,
       'createdOn': createdOn,
       'isAdmin': isAdmin
@@ -50,18 +59,21 @@ export const createUser = (req, res) => {
         firstName: firstName,
         lastName: lastName,
         email: email,
-        password: password,
+        password: pwd,
         status: status,
         createdOn: createdOn,
         isAdmin: isAdmin,
       },
     };
+  res.setHeader('Authorization',token);
   }
+  
   res.status(response.status).json(response);
 };
 
 export const login = (req, res) => {
   let response = {};
+  const result = validateSignin(req.body);
   const { email, password }  = req.body;
   if (email === undefined || password === undefined) {
     response = {
@@ -70,8 +82,14 @@ export const login = (req, res) => {
         error: `${missingParameter(['email', 'password'], req.body )} must be provided`,
       },
     };
-  } else {
-    const userInfo = quickcredit.users.find(user => user.email === email && user.password === password);
+  } else if (!isNull(result.error)) {
+    response = {
+        status: 200,
+        message:result.error.details[0].message, 
+    };
+} else {
+    const userInfo = quickcredit.users.find(user => user.email === email && isEncryptedEqualPlainPassword(password, user.password));
+    const userIndex = quickcredit.users.findIndex(user => user.email === email && isEncryptedEqualPlainPassword(password, user.password));
     if (userInfo === undefined) {
       response = {
         status: 401,
@@ -87,11 +105,13 @@ export const login = (req, res) => {
         },
       };
     } else {
+      const newtoken = generateJwtToken(email);
+      quickcredit.users[userIndex].token = newtoken;
       response = {
         status: 200,
         data: {
           id: userInfo.id,
-          token: userInfo.token,
+          token: newtoken,
           firstName: userInfo.firstName,
           lastName: userInfo.lastName,
           email: userInfo.email,
@@ -103,21 +123,35 @@ export const login = (req, res) => {
       };
     }
   }
-  res.status(response.status).json(response);
+   res.status(response.status).json(response);
 };
 
 export const toggleVerification = (req, res) => {
   let response = {};
   const { email } = req.params;
+  const result = validateVerifyUser({ email: email });
   const userInfo = quickcredit.users;
-  if (email === undefined) {
+  const isAdmin = (quickcredit.users.find(user => user.token === req.headers['authorization']).isAdmin);
+  if (!isAdmin) {
+    response = {
+      status: 403,
+      data: {
+        message: 'You must be an admin to verify user',
+      },
+    };
+  } else if (email === undefined) {
     response = {
       status: 400,
       data: {
         message: 'Email must be provided',
       },
     };
-  } else {
+  } else if (!isNull(result.error)) {
+    response = {
+        status: 200,
+        message:result.error.details[0].message, 
+    };
+} else {
     const userIndex = userInfo.findIndex(user => user.email === email);
     if (userIndex === -1) {
       response = {
@@ -127,16 +161,16 @@ export const toggleVerification = (req, res) => {
         },
       };
     } else {
-      userInfo[userIndex].status = 'verified';
+      quickcredit.users[userIndex].status = 'verified';
       response = {
         status: 200,
         data: {
-          id: userInfo[userIndex].id,
-          token: userInfo[userIndex].token,
-          firstName: userInfo[userIndex].firstName,
-          lastName: userInfo[userIndex].lastName,
-          email: userInfo[userIndex].email,
-          status: userInfo[userIndex].status,
+          id: userInfo.id,
+          token: userInfo.token,
+          firstName: userInfo.firstName,
+          lastName: userInfo.lastName,
+          email: userInfo.email,
+          status: quickcredit.users[userIndex].status,
         },
       };
     }
@@ -146,22 +180,28 @@ export const toggleVerification = (req, res) => {
 
 export const resetPassword = (req, res) => {
   let response = {};
-  const { body: { oldpassword, newpassword }, params: { token } } = req;
+  const { body: { newpassword }, params: { email } } = req;
+  const result = validateResetPassword({ email: email, newpassword: newpassword});
   const userInfo = quickcredit.users;
-  if (!oldpassword || !newpassword || !token) {
+  if (!newpassword || !email) {
     response = {
       status: 400,
       data: {
-        message: `${missingParameter(['token'],req.params)} ${missingParameter(['oldpassword','newpassword'], req.body)} must be provided`,
+        message: `${missingParameter(['email'],req.params)} ${missingParameter(['newpassword'], req.body)} must be provided`,
       },
     };
-  } else {
-    const userIndex = userInfo.findIndex(user => (user.token === token && user.password === oldpassword));
+  } else if (!isNull(result.error)) {
+    response = {
+        status: 200,
+        message:result.error.details[0].message, 
+    };
+} else {
+    const userIndex = userInfo.findIndex(user => (user.email === email));
     if (userIndex === -1) {
       response = {
         status: 404,
         data: {
-          message: `No user record found for token ${token}`,
+          message: `No user record found for email ${email}`,
         },
       };
     } else if (userInfo[userIndex].status === 'unverified') {
@@ -172,7 +212,7 @@ export const resetPassword = (req, res) => {
         },
       };
     } else {
-      userInfo[userIndex].password = newpassword;
+      userInfo[userIndex].password = encryptPassword(newpassword);
       response = {
         status: 200,
         data: userInfo[userIndex],
