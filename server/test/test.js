@@ -339,7 +339,7 @@ describe(`POST ${baseUrl}/loans/<id>/repayment`, () => {
       .send({ amount: 210.0 })
       .end((err, res) => {
       
-        expect(res.status).to.eql(200);
+        expect(res.status).to.eql(201);
         done(err);
       });
   });
