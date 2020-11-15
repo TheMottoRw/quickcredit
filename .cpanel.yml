@@ -1,6 +1,6 @@
 ---
 deployment:
   tasks:
-    - export DEPLOYPATH=/home/user/public_html/quickcredit
+    - export DEPLOYPATH=/home2/bcdvkxan/public_html/quickcredit
     - /bin/cp -R UI $DEPLOYPATH
     - /bin/cp README.md $DEPLOYPATH
